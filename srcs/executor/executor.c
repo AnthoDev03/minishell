@@ -33,29 +33,22 @@ void cleanup_append_redirection(int saved_stdin, FILE *tempfile) {
 }
 
 void execute(t_node *root) {
-  if (!root)
-    return;
+    if (!root)
+        return;
 
-  switch (root->type) {
-  case NODE_COMMAND:
-    execute_command(root);
-    break;
-  case NODE_PIPE:
-    execute_pipeline(root);
-    break;
-  case NODE_REDIRECT_IN:
-    execute_redirect_in(root);
-    break;
-  case NODE_REDIRECT_OUT:
-    execute_redirect_out(root);
-    break;
-  case NODE_REDIRECT_IN_APPEND:
-    execute_redirect_in_append(root);
-    break;
-  case NODE_REDIRECT_OUT_APPEND:
-    execute_redirect_out_append(root);
-    break;
-  default:
-    fprintf(stderr, "Error: Unknown node type\n");
-  }
+    if (root->type == NODE_COMMAND) {
+        execute_command(root);
+    } else if (root->type == NODE_PIPE) {
+        execute_pipeline(root);
+    } else if (root->type == NODE_REDIRECT_IN) {
+        execute_redirect_in(root);
+    } else if (root->type == NODE_REDIRECT_OUT) {
+        execute_redirect_out(root);
+    } else if (root->type == NODE_REDIRECT_IN_APPEND) {
+        execute_redirect_in_append(root);
+    } else if (root->type == NODE_REDIRECT_OUT_APPEND) {
+        execute_redirect_out_append(root);
+    } else {
+        write(2, "Error: Unknown node type\n", 23);
+    }
 }
