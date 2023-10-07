@@ -35,7 +35,7 @@ int	is_key_present(char **env, char *key, int len)
 {
 	while (*env)
 	{
-		if (strncmp(*env, key, len) == 0 && (*env)[len] == '=')
+		if (ft_strncmp(*env, key, len) == 0 && (*env)[len] == '=')
 			return (1);
 		env++;
 	}

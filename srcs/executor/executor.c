@@ -27,13 +27,13 @@ FILE	*setup_append_redirection(char *delimiter)
 	}
 	while ((buffer = readline("")) != NULL)
 	{
-		if (strncmp(buffer, delimiter, strlen(delimiter)) == 0
-			&& buffer[strlen(delimiter)] == '\n')
+		if (ft_strncmp(buffer, delimiter, strlen(delimiter)) == 0
+			&& buffer[ft_strlen(delimiter)] == '\n')
 		{
 			free(buffer);
 			break ;
 		}
-		write(tempfile_fd, buffer, strlen(buffer));
+		write(tempfile_fd, buffer, ft_strlen(buffer));
 		write(tempfile_fd, "\n", 1);
 		free(buffer);
 	}

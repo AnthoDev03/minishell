@@ -5,11 +5,11 @@ void	handle_var_set(char *key, char *value)
 	int		len;
 	char	**env;
 
-	len = strlen(key);
+	len = ft_strlen(key);
 	env = environ;
 	while (*env)
 	{
-		if (strncmp(*env, key, len) == 0 && (*env)[len] == '=')
+		if (ft_strncmp(*env, key, len) == 0 && (*env)[len] == '=')
 		{
 			replace_existing_var(env, key, value);
 			return ;
@@ -27,7 +27,7 @@ void	set_env_var(t_node *commandNode)
 	char	*value;
 
 	key = commandNode->left->value;
-	equal_sign = strchr(key, '=');
+	equal_sign = ft_strchr(key, '=');
 	if (!equal_sign)
 	{
 		printf("Malformed input: %s. Expected format: KEY=VALUE\n", key);

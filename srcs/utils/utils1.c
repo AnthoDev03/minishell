@@ -1,68 +1,48 @@
 #include "../../include/minishell.h"
 
-int	ft_strlen(const char *s)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (s[i])
+	while (s1[i] || s2[i])
+	{
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 		i++;
-	return (i);
+	}
+	return (0);
 }
-
-char	*ft_strjoin(char const *s1, char const *s2)
+char *ft_strcpy(char *dest, char *src)
 {
-	char	*res;
-	int		i;
-	int		j;
+	int i;
 
 	i = 0;
-	j = 0;
-	if (!s1 || !s2 || !(res = malloc(ft_strlen(s1) + ft_strlen(s2) + 1)))
-		return (NULL);
-	while (s1[i])
+	while (src[i] != '\0')
 	{
-		res[i] = s1[i];
+		dest[i] = src[i];
 		i++;
 	}
-	while (s2[j])
-		res[i++] = s2[j++];
-	res[i] = '\0';
-	return (res);
+	dest[i] = '\0';
+	return (dest);
 }
-
-char	**ft_split(const char *str, char c)
+char	*ft_strncpy(char *dest, const char *src, unsigned int n)
 {
-	int		i = 0, j = 0, k;
-	char	**tab;
+	unsigned int	i;
 
-	i = 0, j = 0, k = 0;
-	tab = malloc((ft_strlen(str) + 1) * sizeof(char *));
-	if (!tab)
-		return (NULL);
-	while (str[i])
+	i = 0;
+	while (src[i] != '\0' && i < n)
 	{
-		while (str[i] == c)
-			i++;
-		j = i;
-		while (str[j] && str[j] != c)
-			j++;
-		if (j > i)
-		{
-			tab[k] = malloc(j - i + 1);
-			if (tab[k])
-			{
-				strncpy(tab[k], str + i, j - i);
-				tab[k][j - i] = 0;
-				k++;
-			}
-		}
-		i = j;
+		dest[i] = src[i];
+		++i;
 	}
-	tab[k] = NULL;
-	return (tab);
+	while (i < n)
+	{
+		dest[i] = '\0';
+		i++;
+	}
+	return (dest);
 }
-
 int	ft_execvp(const char *file, char *const argv[])
 {
 	char	**paths;

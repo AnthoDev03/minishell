@@ -11,7 +11,7 @@ t_node	*create_node(t_nodetype type, char *value)
 		return (NULL);
 	}
 	new_node->type = type;
-	new_node->value = value ? strdup(value) : NULL;
+	new_node->value = value ? ft_strdup(value) : NULL;
 	new_node->left = NULL;
 	new_node->right = NULL;
 	return (new_node);
@@ -60,7 +60,7 @@ t_node	*parse_redirect(t_token *tokens, int *index, t_nodetype redirect_type)
 		free_tree(redirect_node);
 		return (NULL);
 	}
-	redirect_node->value = strdup(tokens[(*index)++].value);
+	redirect_node->value = ft_strdup(tokens[(*index)++].value);
 	return (redirect_node);
 }
 

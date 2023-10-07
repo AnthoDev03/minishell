@@ -43,7 +43,7 @@ void	execute_command(t_node *node)
 		exit_command, pwd_command, unset_command, export_command};
 	while (i < 7)
 	{
-		if (strcmp(node->value, builtins[i]) == 0)
+		if (ft_strcmp(node->value, builtins[i]) == 0)
 		{
 			funcs[i](node);
 			return ;

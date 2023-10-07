@@ -26,9 +26,9 @@ void	get_env_var_name(t_expander *exp, char *var_name)
 {
 	const char	*end_pos = exp->current + 1;
 
-	while (isalnum(*end_pos) || *end_pos == '_')
+	while (ft_isalnum(*end_pos) || *end_pos == '_')
 		end_pos++;
-	strncpy(var_name, exp->current + 1, end_pos - exp->current - 1);
+	ft_strncpy(var_name, exp->current + 1, end_pos - exp->current - 1);
 	var_name[end_pos - exp->current - 1] = '\0';
 	exp->current = end_pos;
 }
@@ -38,17 +38,15 @@ void	expand_env_var(t_expander *exp)
 	char		*env_value;
 	size_t		remaining_size;
 	ptrdiff_t	offset;
-
 	char var_name[256];
-		// Maximum size for an environment variable name. You can
-						// adjust this value.
+
 	get_env_var_name(exp, var_name);
 	env_value = getenv(var_name);
 	if (env_value)
 	{
 		remaining_size = exp->buffer_size - (exp->write_pos
 				- exp->expanded_str);
-		while (remaining_size < strlen(env_value) + 1)
+		while (remaining_size < ft_strlen(env_value) + 1)
 		{
 			offset = exp->write_pos - exp->expanded_str;
 			exp->buffer_size *= 2;
@@ -57,7 +55,7 @@ void	expand_env_var(t_expander *exp)
 			remaining_size = exp->buffer_size - (exp->write_pos
 					- exp->expanded_str);
 		}
-		strcpy(exp->write_pos, env_value);
-		exp->write_pos += strlen(env_value);
+		ft_strcpy(exp->write_pos, env_value);
+		exp->write_pos += ft_strlen(env_value);
 	}
 }

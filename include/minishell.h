@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include "../libft/libft.h"
 extern char **environ;
 // -- -- -- -- -- -- -- -- - LEXER -- -- -- -- -- -- -- -- -- -- -
 
@@ -128,9 +129,8 @@ void env_command();
 void exit_command();
 
 //-----------------------------UTILS------------------------------------
-int ft_strlen(const char *s);
-char *ft_strjoin(char const *s1, char const *s2);
-char **ft_split(const char *str, char c);
+int	ft_strcmp(const char *s1, const char *s2);
 int ft_execvp(const char *file, char *const argv[]);
-
+char	*ft_strncpy(char *dest, const char *src, unsigned int n);
+char *ft_strcpy(char *dest, char *src);
 #endif

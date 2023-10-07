@@ -40,7 +40,7 @@ void handle_space_char(t_lexer *lexer) {
   if (lexer->bufidx > 0) {
     lexer->buffer[lexer->bufidx] = '\0';
     t_token t;
-    t.value = strdup(lexer->buffer);
+    t.value = ft_strdup(lexer->buffer);
     if (lexer->tokencount == 0) {
       t.type = TOKEN_COMMAND;
     } else {
@@ -89,7 +89,7 @@ void handle_token_end(t_lexer *lexer) {
   if (lexer->bufidx > 0) {
     lexer->buffer[lexer->bufidx] = '\0';
     t_token t;
-    t.value = strdup(lexer->buffer);
+    t.value = ft_strdup(lexer->buffer);
     if (lexer->tokencount == 0) {
       t.type = TOKEN_COMMAND;
     } else {
@@ -155,11 +155,15 @@ t_token *tokenize_with_quotes(char *input) {
 }
 
 void free_tokens(t_token *tokens) {
-  if (tokens == NULL) {
+  int i;
+
+  i = 0;
+  if (tokens == NULL)
     return;
-  }
-  for (int i = 0; tokens[i].type != TOKEN_EOF; i++) {
+  while (tokens[i].type != TOKEN_EOF) 
+  {
     free(tokens[i].value);
+    i++;
   }
   free(tokens);
 }

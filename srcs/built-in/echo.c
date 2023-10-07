@@ -6,7 +6,7 @@ void	print_node(t_node *node)
 		return ;
 	printf("%s", node->value);
 	if (node->right != NULL)
-		putchar(' ');
+		printf(" ");
 	print_node(node->right);
 }
 
@@ -17,12 +17,12 @@ void	echo_command(t_node *commandNode)
 
 	newline = 1;
 	argnode = commandNode->left;
-	while (argnode != NULL && strcmp(argnode->value, "-n") == 0)
+	while (argnode != NULL && ft_strcmp(argnode->value, "-n") == 0)
 	{
 		newline = 0;
 		argnode = argnode->right;
 	}
 	print_node(argnode);
 	if (newline)
-		putchar('\n');
+		printf("\n");
 }

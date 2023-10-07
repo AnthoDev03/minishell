@@ -7,10 +7,10 @@ char	**find_variable(char *var_name)
 	int		len;
 
 	env = environ;
-	len = strlen(var_name);
+	len = ft_strlen(var_name);
 	while (*env)
 	{
-		if (strncmp(*env, var_name, len) == 0 && (*env)[len] == '=')
+		if (ft_strncmp(*env, var_name, len) == 0 && (*env)[len] == '=')
 			return (env);
 		env++;
 	}
@@ -42,7 +42,5 @@ void	unset_command(t_node *commandNode)
 	var_name = commandNode->left->value;
 	var_loc = find_variable(var_name);
 	if (var_loc)
-	{
 		shift_env_vars_left(var_loc);
-	}
 }
