@@ -37,8 +37,7 @@ void child_pipeline(int *pipe_fd, t_node *root) {
 }
 
 void parent_pipeline(int *pipe_fd, t_node *root, int *saved_stdin, pid_t pid) {
-  *saved_stdin = dup(STDIN_FILENO); // Sauvegarde STDIN
-
+  *saved_stdin = dup(STDIN_FILENO);
   close(pipe_fd[1]);
   if (dup2(pipe_fd[0], STDIN_FILENO) == -1) {
     perror("dup2 in parent_pipeline");
@@ -47,7 +46,6 @@ void parent_pipeline(int *pipe_fd, t_node *root, int *saved_stdin, pid_t pid) {
   close(pipe_fd[0]);
   int child_status = wait_for_child(pid);
   if (WIFEXITED(child_status) && WEXITSTATUS(child_status) != 0) {
-    // The child process had an error.
     return;
   }
 
