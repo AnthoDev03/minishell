@@ -26,10 +26,20 @@ typedef enum e_token_type {
   TOKEN_ERROR,
   TOKEN_EOF
 } t_token_type;
+
 typedef struct s_token {
   t_token_type type;
   char *value;
 } t_token;
+
+typedef struct s_lexer {
+  char *current;   // Pointer to the current character
+  t_token *tokens; // Array of tokens
+  int tokencount;  // Token count
+  char *buffer;    // Buffer to hold temporary characters
+  int bufidx;      // Buffer index
+  int error;       // Error flag
+} t_lexer;
 
 t_token *tokenize_with_quotes(char *input);
 void free_tokens(t_token *tokens);
