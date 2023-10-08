@@ -27,7 +27,7 @@ FILE	*setup_append_redirection(char *delimiter)
 	}
 	while ((buffer = readline("")) != NULL)
 	{
-		if (ft_strncmp(buffer, delimiter, strlen(delimiter)) == 0
+		if (ft_strncmp(buffer, delimiter, ft_strlen(delimiter)) == 0
 			&& buffer[ft_strlen(delimiter)] == '\n')
 		{
 			free(buffer);

@@ -5,7 +5,7 @@ void	init_expander(t_expander *exp, char *input)
 	exp->current = input;
 	exp->in_single_quotes = 0;
 	exp->in_double_quotes = 0;
-	exp->buffer_size = strlen(input) + 1;
+	exp->buffer_size = ft_strlen(input) + 1;
 	exp->expanded_str = malloc(exp->buffer_size);
 	exp->write_pos = exp->expanded_str;
 }

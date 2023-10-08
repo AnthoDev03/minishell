@@ -44,6 +44,15 @@ typedef struct s_lexer {
 
 t_token *tokenize_with_quotes(char *input);
 void free_tokens(t_token *tokens);
+void handle_escape_char(t_lexer *lexer);
+void handle_quoted_string(t_lexer *lexer, char quote_char); 
+void handle_space_char(t_lexer *lexer); 
+void handle_pipe(t_lexer *lexer);
+void handle_redirect_in(t_lexer *lexer); 
+void handle_redirect_out(t_lexer *lexer);
+void handle_token_end(t_lexer *lexer);
+void handle_special_char(t_lexer *lexer, t_token_type type); 
+
 
 //-- -- -- -- -- -- -- -- -- -- PARSER -- -- -- -- -- -- -- -- -- -- -
 

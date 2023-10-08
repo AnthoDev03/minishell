@@ -1,68 +1,72 @@
 #include "../../include/minishell.h"
 
-void	dup_to(int oldfd, int newfd, int *saved)
+static void init_builtin_commands(char **builtins, void (**funcs)(t_node *))
 {
-	*saved = dup(oldfd);
-	if (dup2(newfd, oldfd) == -1)
-	{
-		perror("dup2");
-		exit(EXIT_FAILURE);
-	}
+    builtins[0] = "cd";
+    builtins[1] = "echo";
+    builtins[2] = "env";
+    builtins[3] = "exit";
+    builtins[4] = "pwd";
+    builtins[5] = "unset";
+    builtins[6] = "export";
+
+    funcs[0] = cd_command;
+    funcs[1] = echo_command;
+    funcs[2] = env_command;
+    funcs[3] = exit_command;
+    funcs[4] = pwd_command;
+    funcs[5] = unset_command;
+    funcs[6] = export_command;
 }
 
-void	close_pipes(int *pipe_fd)
+static int handle_builtin_commands(t_node *node) // returns 1 if handled, 0 otherwise
 {
-	close(pipe_fd[0]);
-	close(pipe_fd[1]);
+    int i;
+    char *builtins[7];
+    void (*funcs[7])(t_node *);
+
+    init_builtin_commands(builtins, funcs);
+
+    i = 0;
+    while (i < 7)
+    {
+        if (ft_strcmp(node->value, builtins[i]) == 0)
+        {
+            funcs[i](node);
+            return 1;
+        }
+        i++;
+    }
+    return 0;
 }
 
-void	restore_fd(int oldfd, int saved)
+
+static void execute_external_command(t_node *node)
 {
-	dup2(saved, oldfd);
-	close(saved);
+    pid_t pid;
+    char *args[3];
+    
+    args[0] = node->value;
+    args[1] = NULL;
+    args[2] = NULL;
+    if (node->left)
+        args[1] = node->left->value;
+    pid = fork();
+    if (pid < 0)
+    {
+        perror("fork");
+        return ;
+    }
+    if (pid == 0)
+    {
+        ft_execvp(args[0], args);
+        exit(EXIT_FAILURE);
+    }
+    wait_for_child(pid);
 }
 
-void	setup_pipe(int *pipe_fd)
+void execute_command(t_node *node)
 {
-	if (pipe(pipe_fd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-}
-
-void	execute_command(t_node *node)
-{
-  int   i = 0;
-	char	*builtins[] = {"cd", "echo", "env", "exit", "pwd", "unset",
-			"export"};
-	char	*args[3] = {node->value, NULL, NULL};
-	pid_t	pid;
-
-	void (*funcs[])(t_node *) = {cd_command, echo_command, env_command,
-		exit_command, pwd_command, unset_command, export_command};
-	while (i < 7)
-	{
-		if (ft_strcmp(node->value, builtins[i]) == 0)
-		{
-			funcs[i](node);
-			return ;
-		}
-    i++;
-	}
-	if (node->left)
-		args[1] = node->left->value;
-	pid = fork();
-	if (pid < 0)
-	{
-		perror("fork");
-		return ;
-	}
-	if (pid == 0)
-	{
-		ft_execvp(args[0], args);
-		perror("execvp");
-		exit(EXIT_FAILURE);
-	}
-	wait_for_child(pid);
+    if (!handle_builtin_commands(node))
+        execute_external_command(node);
 }
