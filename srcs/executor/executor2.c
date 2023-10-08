@@ -18,7 +18,7 @@ static void init_builtin_commands(char **builtins, void (**funcs)(t_node *))
     funcs[6] = export_command;
 }
 
-static int handle_builtin_commands(t_node *node) // returns 1 if handled, 0 otherwise
+static int handle_builtin_commands(t_node *node)
 {
     int i;
     char *builtins[7];
@@ -43,7 +43,7 @@ static void execute_external_command(t_node *node)
 {
     pid_t pid;
     char *args[3];
-    
+
     args[0] = node->value;
     args[1] = NULL;
     args[2] = NULL;

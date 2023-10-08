@@ -32,30 +32,3 @@ void	get_env_var_name(t_expander *exp, char *var_name)
 	var_name[end_pos - exp->current - 1] = '\0';
 	exp->current = end_pos;
 }
-
-void	expand_env_var(t_expander *exp)
-{
-	char		*env_value;
-	size_t		remaining_size;
-	ptrdiff_t	offset;
-	char var_name[256];
-
-	get_env_var_name(exp, var_name);
-	env_value = getenv(var_name);
-	if (env_value)
-	{
-		remaining_size = exp->buffer_size - (exp->write_pos
-				- exp->expanded_str);
-		while (remaining_size < ft_strlen(env_value) + 1)
-		{
-			offset = exp->write_pos - exp->expanded_str;
-			exp->buffer_size *= 2;
-			exp->expanded_str = realloc(exp->expanded_str, exp->buffer_size);
-			exp->write_pos = exp->expanded_str + offset;
-			remaining_size = exp->buffer_size - (exp->write_pos
-					- exp->expanded_str);
-		}
-		ft_strcpy(exp->write_pos, env_value);
-		exp->write_pos += ft_strlen(env_value);
-	}
-}
