@@ -1,6 +1,5 @@
 #include "../../include/minishell.h"
 
-
 void handle_redirect_out(t_lexer *lexer) {
   t_token t;
   t.value = NULL;
@@ -18,6 +17,7 @@ void handle_token_end(t_lexer *lexer) {
   if (lexer->bufidx > 0) {
     lexer->buffer[lexer->bufidx] = '\0';
     t_token t;
+
     t.value = ft_strdup(lexer->buffer);
     if (lexer->tokencount == 0) {
       t.type = TOKEN_COMMAND;

@@ -1,81 +1,65 @@
 #include "../../include/minishell.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+static char *construct_path(const char *dir, const char *file)
 {
-	size_t	i;
+    char *exec_path;
+    char *complete_path;
 
-	i = 0;
-	while (s1[i] || s2[i])
-	{
-		if (s1[i] != s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		i++;
-	}
-	return (0);
+    exec_path = ft_strjoin(dir, "/");
+    complete_path = ft_strjoin(exec_path, file);
+    if (access(complete_path, X_OK) == 0)
+    {
+        free(exec_path);
+        return complete_path;
+    }
+    free(complete_path);
+    free(exec_path);
+    return NULL;
 }
-char *ft_strcpy(char *dest, char *src)
+
+static char *get_exec_path_from_env(const char *file)
 {
-	int i;
+    char **paths;
+    char *path;
+    char *complete_path;
+    int i;
 
-	i = 0;
-	while (src[i] != '\0')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
+    path = getenv("PATH");
+    if (!path)
+        return NULL;
+
+    paths = ft_split(path, ':');
+    i = 0;
+    while (paths[i])
+    {
+        complete_path = construct_path(paths[i], file);
+        if (complete_path)
+            return complete_path;
+
+        i++;
+    }
+    return NULL;
 }
-char	*ft_strncpy(char *dest, const char *src, unsigned int n)
+
+int ft_execvp(const char *file, char *const argv[])
 {
-	unsigned int	i;
+    char *complete_path;
 
-	i = 0;
-	while (src[i] != '\0' && i < n)
-	{
-		dest[i] = src[i];
-		++i;
-	}
-	while (i < n)
-	{
-		dest[i] = '\0';
-		i++;
-	}
-	return (dest);
+    if (access(file, X_OK) == 0)
+    {
+        execve(file, argv, environ);
+        perror("execve");
+        exit(EXIT_FAILURE);
+    }
+    complete_path = get_exec_path_from_env(file);
+    if (complete_path)
+    {
+        execve(complete_path, argv, environ);
+        free(complete_path);
+        perror("execve");
+        exit(EXIT_FAILURE);
+    }
+    perror("ft_execvp");
+    return (-1);
 }
-int	ft_execvp(const char *file, char *const argv[])
-{
-	char	**paths;
-	char	*path;
-	char	*exec_path;
-	int		i;
-	char	*complete_path;
 
-	path = getenv("PATH");
-	i = 0;
-	if (!path || access(file, X_OK) == 0)
-	{
-		execve(file, argv, environ);
-		perror("execve");
-		exit(EXIT_FAILURE);
-	}
-	paths = ft_split(path, ':');
-	while (paths[i])
-	{
-		exec_path = ft_strjoin(paths[i], "/");
-		complete_path = ft_strjoin(exec_path, file);
-		if (access(complete_path, X_OK) == 0)
-		{
-			execve(complete_path, argv, environ);
-			free(complete_path);
-			free(exec_path);
-			perror("execve");
-			exit(EXIT_FAILURE);
-		}
-		free(complete_path);
-		free(exec_path);
-		i++;
-	}
-	perror("ft_execvp");
-	return (-1);
-}

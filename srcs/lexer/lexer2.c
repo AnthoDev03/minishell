@@ -72,4 +72,3 @@ void handle_redirect_in(t_lexer *lexer) {
   }
   lexer->tokens[(lexer->tokencount)++] = t;
 }
-

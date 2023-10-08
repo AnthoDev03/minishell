@@ -9,7 +9,6 @@ static void init_builtin_commands(char **builtins, void (**funcs)(t_node *))
     builtins[4] = "pwd";
     builtins[5] = "unset";
     builtins[6] = "export";
-
     funcs[0] = cd_command;
     funcs[1] = echo_command;
     funcs[2] = env_command;
@@ -39,7 +38,6 @@ static int handle_builtin_commands(t_node *node) // returns 1 if handled, 0 othe
     }
     return 0;
 }
-
 
 static void execute_external_command(t_node *node)
 {

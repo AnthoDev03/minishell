@@ -14,6 +14,8 @@
 #include <unistd.h>
 #include "../libft/libft.h"
 extern char **environ;
+#define TMP_FILENAME "/tmp/my_temp_file"
+
 // -- -- -- -- -- -- -- -- - LEXER -- -- -- -- -- -- -- -- -- -- -
 
 typedef enum e_token_type {

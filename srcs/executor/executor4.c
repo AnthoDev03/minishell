@@ -59,12 +59,4 @@ int	open_file_write(const char *path)
 	return (fd);
 }
 
-int	open_file_append(const char *path)
-{
-	int	fd;
 
-	fd = open(path, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd == -1)
-		perror("open");
-	return (fd);
-}
