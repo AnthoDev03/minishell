@@ -1,6 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anthrodr <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/09 11:25:16 by anthrodr          #+#    #+#             */
+/*   Updated: 2023/10/09 12:01:05 by anthrodr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../include/minishell.h"
-#include <stdio.h>
-
 
 void	handle_sigint(int sig)
 {
@@ -16,16 +25,15 @@ void	handle_sigquit(int sig)
 	(void)sig;
 }
 
-
 void	initialize_signal_handlers(void)
 {
-	struct sigaction sa_int, sa_quit;
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
 
 	sa_int.sa_handler = handle_sigint;
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa_int, NULL);
-
 	sa_quit.sa_handler = handle_sigquit;
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;
@@ -59,12 +67,11 @@ int	main(void)
 	char	*input;
 
 	initialize_signal_handlers();
-
-	while ((input = readline("minishell> ")))
+	input = readline("minishell> ");
+	while (input)
 	{
 		process_input_line(input);
+		input = readline("minishell> ");
 	}
-
 	return (0);
 }
-

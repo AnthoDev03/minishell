@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor4.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anthrodr <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/09 11:35:59 by anthrodr          #+#    #+#             */
+/*   Updated: 2023/10/09 11:36:02 by anthrodr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../../include/minishell.h"
 
 void	execute_redirect_in_append(t_node *root)
@@ -58,5 +69,3 @@ int	open_file_write(const char *path)
 		perror("open");
 	return (fd);
 }
-
-

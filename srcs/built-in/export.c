@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anthrodr <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/09 11:34:06 by anthrodr          #+#    #+#             */
+/*   Updated: 2023/10/09 11:34:11 by anthrodr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../../include/minishell.h"
 
 void	print_env_vars(void)
@@ -46,18 +57,18 @@ void	add_new_env_var(char *key, char *value)
 {
 	int		count;
 	char	**new_environ;
-  int   idx;
+	int		idx;
 
-  idx = 0;
+	idx = 0;
 	count = 0;
 	while (environ[count])
 		count++;
 	new_environ = malloc(sizeof(char *) * (count + 2));
 	while (idx < count)
-  {
+	{
 		new_environ[idx] = environ[idx];
-    idx++;
-  }
+		idx++;
+	}
 	new_environ[count] = create_new_entry(key, value);
 	new_environ[count + 1] = NULL;
 	free(environ);

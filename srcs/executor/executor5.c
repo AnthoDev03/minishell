@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor5.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anthrodr <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/09 11:36:07 by anthrodr          #+#    #+#             */
+/*   Updated: 2023/10/09 11:36:10 by anthrodr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../../include/minishell.h"
 
 void	dup_to(int oldfd, int newfd, int *saved)
@@ -40,4 +51,3 @@ int	open_file_append(const char *path)
 		perror("open");
 	return (fd);
 }
-

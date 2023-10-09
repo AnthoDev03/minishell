@@ -1,24 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser2.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anthrodr <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/09 11:38:04 by anthrodr          #+#    #+#             */
+/*   Updated: 2023/10/09 11:38:07 by anthrodr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../../include/minishell.h"
 
-t_node *create_node(t_nodetype type, char *value)
+t_node	*create_node(t_nodetype type, char *value)
 {
-    t_node *new_node;
+	t_node	*new_node;
 
-    new_node = malloc(sizeof(t_node));
-    if (!new_node)
-    {
-        write(1, "Error: Memory allocation failed\n", 29);
-        return (NULL);
-    }
-    new_node->type = type;
-
-    if (value)
-        new_node->value = ft_strdup(value);
-    else
-            new_node->value = NULL;
-    new_node->left = NULL;
-    new_node->right = NULL;
-    return (new_node);
+	new_node = malloc(sizeof(t_node));
+	if (!new_node)
+	{
+		write(1, "Error: Memory allocation failed\n", 29);
+		return (NULL);
+	}
+	new_node->type = type;
+	if (value)
+		new_node->value = ft_strdup(value);
+	else
+		new_node->value = NULL;
+	new_node->left = NULL;
+	new_node->right = NULL;
+	return (new_node);
 }
 
 void	free_tree(t_node *root)
