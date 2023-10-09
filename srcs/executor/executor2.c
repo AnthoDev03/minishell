@@ -22,9 +22,9 @@ static void	init_builtin_commands(char **builtins, void (**funcs)(t_node *))
 	builtins[6] = "export";
 	funcs[0] = cd_command;
 	funcs[1] = echo_command;
-	funcs[2] = env_command;
-	funcs[3] = exit_command;
-	funcs[4] = pwd_command;
+	funcs[2] = (void *)env_command;
+	funcs[3] = (void *)exit_command;
+	funcs[4] = (void *)pwd_command;
 	funcs[5] = unset_command;
 	funcs[6] = export_command;
 }
