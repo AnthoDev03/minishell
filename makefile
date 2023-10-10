@@ -18,7 +18,8 @@ SRC = srcs/main.c srcs/lexer/lexer.c srcs/parser/parser.c \
 
 OBJ = $(SRC:.c=.o)
 
-all: lib $(EXEC)
+all: lib
+	@if [ ! -f $(EXEC) ]; then $(MAKE) $(EXEC); else echo "$(EXEC) is up to date!"; fi
 
 lib:
 	@$(MAKE) -C libft
@@ -40,4 +41,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re lib
-

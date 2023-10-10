@@ -9,14 +9,16 @@ OBJS = $(SRCS:.c=.o)
 OBJS_BONUS = $(SRCS_BONUS:.c=.o)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c99
+CFLAGS = -Wall -Wextra -Werror
 ARFLAGS = -rcs
 RM = rm -rf
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	ar $(ARFLAGS) $(NAME).a $(OBJS)
+$(NAME).a: $(OBJS)
+	ar $(ARFLAGS) $@ $(OBJS)
+
+$(NAME): $(NAME).a
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -36,4 +38,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all, clean, fclean, re
+.PHONY: all clean fclean re
