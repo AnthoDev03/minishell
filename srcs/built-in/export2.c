@@ -39,7 +39,7 @@ void	set_env_var(t_node *commandNode)
 
 	key = commandNode->left->value;
 	equal_sign = ft_strchr(key, '=');
-	if (!equal_sign)
+	if (!equal_sign || equal_sign == key)
 	{
 		printf("Malformed input: %s. Expected format: KEY=VALUE\n", key);
 		return ;

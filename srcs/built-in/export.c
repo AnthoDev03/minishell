@@ -30,6 +30,11 @@ char	*create_new_entry(char *key, char *value)
 
 	len = strlen(key) + strlen(value) + 2;
 	new_entry = malloc(len);
+	if (!new_entry)
+	{
+		fprintf(stderr, "Memory allocation failed\n");
+		return (NULL);
+	}
 	strcpy(new_entry, key);
 	strcat(new_entry, "=");
 	strcat(new_entry, value);
@@ -38,7 +43,8 @@ char	*create_new_entry(char *key, char *value)
 
 void	replace_existing_var(char **env, char *key, char *value)
 {
-	free(*env);
+	
+	// Removed problematic free call
 	*env = create_new_entry(key, value);
 }
 
@@ -53,6 +59,7 @@ int	is_key_present(char **env, char *key, int len)
 	return (0);
 }
 
+
 void	add_new_env_var(char *key, char *value)
 {
 	int		count;
@@ -64,6 +71,11 @@ void	add_new_env_var(char *key, char *value)
 	while (environ[count])
 		count++;
 	new_environ = malloc(sizeof(char *) * (count + 2));
+	if (!new_environ)
+	{
+		fprintf(stderr, "Memory allocation failed\n");
+		return;
+	}
 	while (idx < count)
 	{
 		new_environ[idx] = environ[idx];
@@ -71,6 +83,6 @@ void	add_new_env_var(char *key, char *value)
 	}
 	new_environ[count] = create_new_entry(key, value);
 	new_environ[count + 1] = NULL;
-	free(environ);
+	// Do not free the original environ as it may not be dynamically allocated
 	environ = new_environ;
 }
