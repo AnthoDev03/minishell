@@ -99,7 +99,7 @@ int main(void)
 
         if (!input)  // If the user presses CTRL+D
         {
-            write(STDOUT_FILENO, "\n", 1);
+            write(STDOUT_FILENO, "", 0);
             exit(0);
         }
 
