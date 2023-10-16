@@ -11,6 +11,54 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
+void print_lexer(t_token *tokens) {
+    if (!tokens) return;
+
+    printf("Tokens:\n");
+    while (tokens->type != TOKEN_EOF) {
+        printf("Type: ");
+        switch (tokens->type) {
+            case TOKEN_COMMAND: printf("COMMAND"); break;
+            case TOKEN_ARGUMENT: printf("ARGUMENT"); break;
+            case TOKEN_PIPE: printf("PIPE"); break;
+            case TOKEN_REDIRECT_IN: printf("REDIRECT_IN"); break;
+            case TOKEN_REDIRECT_OUT: printf("REDIRECT_OUT"); break;
+            case TOKEN_REDIRECT_IN_APPEND: printf("REDIRECT_IN_APPEND"); break;
+            case TOKEN_REDIRECT_OUT_APPEND: printf("REDIRECT_OUT_APPEND"); break;
+            default: printf("UNKNOWN");
+        }
+        if (tokens->value)
+            printf(", Value: %s\n", tokens->value);
+        else
+            printf("\n");
+        tokens++;
+    }
+}
+
+void print_parser_helper(t_node *node, int level) {
+    if (!node) return;
+
+    for (int i = 0; i < level; i++) printf("  "); // Indentation
+
+    switch (node->type) {
+        case NODE_COMMAND: printf("COMMAND: %s\n", node->value); break;
+        case NODE_ARGUMENT: printf("ARGUMENT: %s\n", node->value); break;
+        case NODE_PIPE: printf("PIPE\n"); break;
+        case NODE_REDIRECT_IN: printf("REDIRECT_IN: %s\n", node->value); break;
+        case NODE_REDIRECT_OUT: printf("REDIRECT_OUT: %s\n", node->value); break;
+        case NODE_REDIRECT_IN_APPEND: printf("REDIRECT_IN_APPEND: %s\n", node->value); break;
+        case NODE_REDIRECT_OUT_APPEND: printf("REDIRECT_OUT_APPEND: %s\n", node->value); break;
+        default: printf("UNKNOWN\n");
+    }
+
+    print_parser_helper(node->left, level + 1);
+    print_parser_helper(node->right, level + 1);
+}
+
+void print_parser(t_node *root) {
+    printf("Abstract Syntax Tree (AST):\n");
+    print_parser_helper(root, 0);
+}
 void	handle_sigint(int sig)
 {
 	(void)sig;
@@ -53,9 +101,11 @@ void	process_input_line(char *input)
 	add_history(input);
 	input = expand_env_variables(input);
 	tokens = tokenize_with_quotes(input);
+//  print_lexer(tokens);
 	if (tokens != NULL)
 	{
 		root = parse(tokens);
+  //  print_parser(root);
 		execute(root);
 		free_tree(root);
 	}

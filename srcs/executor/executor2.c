@@ -49,14 +49,46 @@ static int	handle_builtin_commands(t_node *node)
 	return (0);
 }
 
+
+
+
+char **create_args_from_ast(t_node *node) {
+    int depth = 0;
+    t_node *temp = node;
+
+    // Count the depth of the tree.
+    while (temp) {
+        depth++;
+        temp = temp->left ? temp->left : temp->right;  // Consider right nodes as well
+    }
+
+    char **args = malloc((depth + 1) * sizeof(char *));
+    if (!args) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
+    int index = 0;
+
+    // Traverse the tree again and store command/arguments in args[].
+    temp = node;
+    while (temp) {
+        args[index++] = temp->value;
+        temp = temp->left ? temp->left : temp->right;  // Consider right nodes as well
+    }
+
+    args[index] = NULL;
+
+    return args;
+}
+
+
+
+
 static void	execute_external_command(t_node *node)
 {
 	pid_t	pid;
-	char	*args[3];
-
-	args[0] = node->value;
-	args[1] = NULL;
-	args[2] = NULL;
+	char **args = create_args_from_ast(node);
 	if (node->left)
 		args[1] = node->left->value;
 	pid = fork();
