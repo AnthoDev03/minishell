@@ -27,6 +27,7 @@
 # define TMP_FILENAME "/tmp/my_temp_file"
 
 extern char		**environ;
+extern int g_sigint_called;
 // -- -- -- -- -- -- -- -- - LEXER -- -- -- -- -- -- -- -- -- -- -
 
 typedef enum e_token_type

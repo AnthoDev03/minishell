@@ -10,63 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
+int g_sigint_called = 0;
 
-void print_lexer(t_token *tokens) {
-    if (!tokens) return;
 
-    printf("Tokens:\n");
-    while (tokens->type != TOKEN_EOF) {
-        printf("Type: ");
-        switch (tokens->type) {
-            case TOKEN_COMMAND: printf("COMMAND"); break;
-            case TOKEN_ARGUMENT: printf("ARGUMENT"); break;
-            case TOKEN_PIPE: printf("PIPE"); break;
-            case TOKEN_REDIRECT_IN: printf("REDIRECT_IN"); break;
-            case TOKEN_REDIRECT_OUT: printf("REDIRECT_OUT"); break;
-            case TOKEN_REDIRECT_IN_APPEND: printf("REDIRECT_IN_APPEND"); break;
-            case TOKEN_REDIRECT_OUT_APPEND: printf("REDIRECT_OUT_APPEND"); break;
-            default: printf("UNKNOWN");
-        }
-        if (tokens->value)
-            printf(", Value: %s\n", tokens->value);
-        else
-            printf("\n");
-        tokens++;
-    }
-}
 
-void print_parser_helper(t_node *node, int level) {
-    if (!node) return;
 
-    for (int i = 0; i < level; i++) printf("  "); // Indentation
 
-    switch (node->type) {
-        case NODE_COMMAND: printf("COMMAND: %s\n", node->value); break;
-        case NODE_ARGUMENT: printf("ARGUMENT: %s\n", node->value); break;
-        case NODE_PIPE: printf("PIPE\n"); break;
-        case NODE_REDIRECT_IN: printf("REDIRECT_IN: %s\n", node->value); break;
-        case NODE_REDIRECT_OUT: printf("REDIRECT_OUT: %s\n", node->value); break;
-        case NODE_REDIRECT_IN_APPEND: printf("REDIRECT_IN_APPEND: %s\n", node->value); break;
-        case NODE_REDIRECT_OUT_APPEND: printf("REDIRECT_OUT_APPEND: %s\n", node->value); break;
-        default: printf("UNKNOWN\n");
-    }
-
-    print_parser_helper(node->left, level + 1);
-    print_parser_helper(node->right, level + 1);
-}
-
-void print_parser(t_node *root) {
-    printf("Abstract Syntax Tree (AST):\n");
-    print_parser_helper(root, 0);
-}
-void	handle_sigint(int sig)
+void handle_sigint(int sig)
 {
-	(void)sig;
-	write(STDOUT_FILENO, "\nminishell> ", 12);
-	rl_on_new_line_with_prompt();
-	rl_replace_line("", 0);
-	rl_redisplay();
+    (void)sig;
+    rl_on_new_line(); // Move to a new line for readline
+    rl_replace_line("", 0);  // Clear the current line
+
+    write(STDOUT_FILENO, "\nminishell> ", 12);
+    rl_on_new_line_with_prompt();  // Move the cursor back to prompt
+    rl_redisplay();
+
+    g_sigint_called = 1;  // Set this so the main loop can be aware.
 }
+
+
+
+
+
 
 void	handle_sigquit(int sig)
 {
@@ -112,16 +78,35 @@ void	process_input_line(char *input)
 	free(input);
 }
 
-int	main(void)
-{
-	char	*input;
 
-	initialize_signal_handlers();
-	input = readline("minishell> ");
-	while (input)
-	{
-		process_input_line(input);
-		input = readline("minishell> ");
-	}
-	return (0);
+int main(void)
+{
+    char *input;
+
+    initialize_signal_handlers();
+
+    while (1)
+    {
+        if (!g_sigint_called)
+        {
+            input = readline("minishell> ");
+        }
+        else
+        {
+            input = readline("");  // No prompt since handle_sigint already displayed it.
+            g_sigint_called = 0;  // Reset flag
+        }
+
+        if (!input)  // If the user presses CTRL+D
+        {
+            write(STDOUT_FILENO, "\n", 1);
+            exit(0);
+        }
+
+        process_input_line(input);
+        free(input);  // Free the memory allocated by readline
+    }
+
+    return (0);
 }
+
