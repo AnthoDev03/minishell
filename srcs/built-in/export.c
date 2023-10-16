@@ -41,12 +41,16 @@ char	*create_new_entry(char *key, char *value)
 	return (new_entry);
 }
 
-void	replace_existing_var(char **env, char *key, char *value)
+
+void replace_existing_var(char **env, char *key, char *value) 
 {
-	
-	// Removed problematic free call
-	*env = create_new_entry(key, value);
+    char *new_entry = create_new_entry(key, value);
+    if (new_entry) {
+        free(*env);   // Free the existing entry before replacing
+        *env = new_entry;
+    }
 }
+
 
 int	is_key_present(char **env, char *key, int len)
 {
