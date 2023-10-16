@@ -46,7 +46,6 @@ void replace_existing_var(char **env, char *key, char *value)
 {
     char *new_entry = create_new_entry(key, value);
     if (new_entry) {
-        free(*env);   // Free the existing entry before replacing
         *env = new_entry;
     }
 }
