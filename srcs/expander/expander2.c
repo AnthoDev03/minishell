@@ -33,13 +33,21 @@ void	handle_double_quote(t_expander *exp)
 	*(exp->write_pos)++ = *(exp->current)++;
 }
 
+
 void	get_env_var_name(t_expander *exp, char *var_name)
 {
 	const char	*end_pos = exp->current + 1;
 
+	if (*end_pos == '?')
+	{
+		ft_strcpy(var_name, "?");
+		exp->current += 2;
+		return;
+	}
 	while (ft_isalnum(*end_pos) || *end_pos == '_')
 		end_pos++;
 	ft_strncpy(var_name, exp->current + 1, end_pos - exp->current - 1);
 	var_name[end_pos - exp->current - 1] = '\0';
 	exp->current = end_pos;
 }
+

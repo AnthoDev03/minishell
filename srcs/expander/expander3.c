@@ -50,6 +50,18 @@ void	expand_env_var(t_expander *exp)
 	char	var_name[256];
 
 	get_env_var_name(exp, var_name);
+	// Check if var_name is "?"
+	if (ft_strcmp(var_name, "?") == 0)
+	{
+		copy_env_to_expander(exp, "0");
+		return;
+	}
+	// If var_name is empty, it means it was just a lone $
+	if (ft_strlen(var_name) == 0)
+	{
+		*(exp->write_pos)++ = '$';
+		return;
+	}
 	env_value = getenv(var_name);
 	if (env_value)
 	{
