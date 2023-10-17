@@ -10,29 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
+
 int g_sigint_called = 0;
-
-
-
-
 
 void handle_sigint(int sig)
 {
     (void)sig;
-    rl_on_new_line(); // Move to a new line for readline
-    rl_replace_line("", 0);  // Clear the current line
-
+    rl_on_new_line();
+    rl_replace_line("", 0);
     write(STDOUT_FILENO, "\nminishell> ", 12);
-    rl_on_new_line_with_prompt();  // Move the cursor back to prompt
+    rl_on_new_line_with_prompt();
     rl_redisplay();
-
-    g_sigint_called = 1;  // Set this so the main loop can be aware.
+    g_sigint_called = 1;
 }
-
-
-
-
-
 
 void	handle_sigquit(int sig)
 {
@@ -67,11 +57,9 @@ void	process_input_line(char *input)
 	add_history(input);
 	input = expand_env_variables(input);
 	tokens = tokenize_with_quotes(input);
-//  print_lexer(tokens);
 	if (tokens != NULL)
 	{
 		root = parse(tokens);
-  //  print_parser(root);
 		execute(root);
 		free_tree(root);
 	}
@@ -88,23 +76,21 @@ int main(void)
     while (1)
     {
         if (!g_sigint_called)
-        {
             input = readline("minishell> ");
-        }
         else
         {
-            input = readline("");  // No prompt since handle_sigint already displayed it.
-            g_sigint_called = 0;  // Reset flag
+            input = readline("");
+            g_sigint_called = 0;
         }
 
-        if (!input)  // If the user presses CTRL+D
+        if (!input)
         {
             write(STDOUT_FILENO, "", 0);
             exit(0);
         }
 
         process_input_line(input);
-        free(input);  // Free the memory allocated by readline
+        free(input);
     }
 
     return (0);
