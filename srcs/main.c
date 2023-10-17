@@ -44,7 +44,7 @@ void	initialize_signal_handlers(void)
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
-void	process_input_line(char *input)
+void	process_input_line(char *input, char **copyenv)
 {
 	t_token	*tokens;
 	t_node	*root;
@@ -55,21 +55,25 @@ void	process_input_line(char *input)
 		exit(0);
 	}
 	add_history(input);
-	input = expand_env_variables(input);
+	input = expand_env_variables(input, copyenv);
 	tokens = tokenize_with_quotes(input);
 	if (tokens != NULL)
 	{
 		root = parse(tokens);
-		execute(root);
+		execute(root, copyenv);
 		free_tree(root);
 	}
 	free(input);
 }
 
 
-int main(void)
+int main(int ac, char **ag, char **environ)
 {
+  (void)ac;
+  (void)ag;
     char *input;
+
+  char **copyenv = copieEnviron(environ); 
 
     initialize_signal_handlers();
 
@@ -89,9 +93,11 @@ int main(void)
             exit(0);
         }
 
-        process_input_line(input);
+        process_input_line(input, copyenv);
         free(input);
     }
+  libereEnviron(copyenv);
+  
 
     return (0);
 }

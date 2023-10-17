@@ -26,8 +26,9 @@
 # include <unistd.h>
 # define TMP_FILENAME "/tmp/my_temp_file"
 
-extern char		**environ;
 extern int g_sigint_called;
+char** copieEnviron(char **environOrig);
+void libereEnviron(char **environCopie); 
 // -- -- -- -- -- -- -- -- - LEXER -- -- -- -- -- -- -- -- -- -- -
 
 typedef enum e_token_type
@@ -99,7 +100,7 @@ t_node				*parse_pipeline(t_token *tokens, int *index);
 t_node				*parse(t_token *tokens);
 void				free_tree(t_node *root);
 //-- -- -- -- -- -- -- -- -- -- EXPANDER -- -- -- -- -- -- -- -- -- --
-
+char *get_value_from_copyenv(char *var_name, char **copyenv);
 typedef struct s_expander
 {
 	const char		*current;
@@ -113,27 +114,27 @@ void				init_expander(t_expander *exp, char *input);
 void				handle_single_quote(t_expander *exp);
 void				handle_double_quote(t_expander *exp);
 void				get_env_var_name(t_expander *exp, char *var_name);
-void				expand_env_var(t_expander *exp);
-char				*expand_env_variables(char *input);
+void				expand_env_var(t_expander *exp, char **copyenv);
+char				*expand_env_variables(char *input, char **copyenv);
 //------------------------------EXECUTOR-------------------------------
 
-void				execute(t_node *root);
+void				execute(t_node *root, char **copyenv);
 void				cleanup_append_redirection(int saved_stdin, FILE *tempfile);
 FILE				*setup_append_redirection(char *delimiter);
 void				setup_redirection(int oldfd, int newfd, int *saved);
 int					open_file_append(const char *path);
 int					open_file_write(const char *path);
 int					open_file_read(const char *path);
-void				execute_redirect_out_append(t_node *root);
-void				execute_redirect_out(t_node *root);
-void				execute_redirect_in_append(t_node *root);
-void				execute_redirect_in(t_node *root);
+void				execute_redirect_out_append(t_node *root, char **copyenv);
+void				execute_redirect_out(t_node *root,char **copyenv);
+void				execute_redirect_in_append(t_node *root,char **copyenv);
+void				execute_redirect_in(t_node *root,char **copyenv);
 void				parent_pipeline(int *pipe_fd, t_node *root,
-						int *saved_stdin, pid_t pid);
-void				child_pipeline(int *pipe_fd, t_node *root);
-void				execute_pipeline(t_node *root);
+						int *saved_stdin, pid_t pid,char **copyenv);
+void				child_pipeline(int *pipe_fd, t_node *root,char **copyenv);
+void				execute_pipeline(t_node *root,char **copyenv);
 int					wait_for_child(pid_t pid);
-void				execute_command(t_node *node);
+void				execute_command(t_node *node, char **copyenv);
 void				setup_pipe(int *pipe_fd);
 void				restore_fd(int oldfd, int saved);
 void				close_pipes(int *pipe_fd);
@@ -145,22 +146,22 @@ void				cd_command(t_node *commandNode);
 void				echo_command(t_node *commandNode);
 void				pwd_command(void);
 
-void				export_command(t_node *commandNode);
+void	export_command(t_node *commandNode, char **env);
 void				print_env_vars(void);
 char				*create_new_entry(char *key, char *value);
 void				replace_existing_var(char **env, char *key, char *value);
 int					is_key_present(char **env, char *key, int len);
-void				add_new_env_var(char *key, char *value);
-void				handle_var_set(char *key, char *value);
-void				set_env_var(t_node *commandNode);
+char	**add_new_env_var(char **env, char *key, char *value);
+void	handle_var_set(char **env, char *key, char *value);
+void set_env_var(t_node *commandNode, char **copyenv);
 
-void				unset_command(t_node *commandNode);
-void				env_command(void);
+void unset_command(t_node *commandNode, char **copyenv);
+void	env_command(char **env);
 void				exit_command(void);
 
 //-----------------------------UTILS------------------------------------
 int					ft_strcmp(const char *s1, const char *s2);
-int					ft_execvp(const char *file, char *const argv[]);
+int	ft_execvp(const char *file, char *const argv[], char **copyenv);
 char				*ft_strncpy(char *dest, const char *src, unsigned int n);
 char				*ft_strcpy(char *dest, char *src);
 #endif

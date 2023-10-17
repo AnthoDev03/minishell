@@ -11,11 +11,8 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-void	env_command(void)
+void	env_command(char **env)
 {
-	char	**env;
-
-	env = environ;
 	while (*env)
 	{
 		printf("%s\n", *env);

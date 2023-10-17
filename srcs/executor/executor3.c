@@ -19,7 +19,7 @@ int	wait_for_child(pid_t pid)
 	return (status);
 }
 
-void	execute_pipeline(t_node *root)
+void	execute_pipeline(t_node *root, char **copyenv)
 {
 	int		pipe_fd[2];
 	int		saved_stdin;
@@ -34,12 +34,12 @@ void	execute_pipeline(t_node *root)
 		return ;
 	}
 	else if (pid == 0)
-		child_pipeline(pipe_fd, root);
+		child_pipeline(pipe_fd, root, copyenv);
 	else
-		parent_pipeline(pipe_fd, root, &saved_stdin, pid);
+		parent_pipeline(pipe_fd, root, &saved_stdin, pid, copyenv);
 }
 
-void	child_pipeline(int *pipe_fd, t_node *root)
+void	child_pipeline(int *pipe_fd, t_node *root, char **copyenv)
 {
 	close(pipe_fd[0]);
 	if (dup2(pipe_fd[1], STDOUT_FILENO) == -1)
@@ -48,11 +48,11 @@ void	child_pipeline(int *pipe_fd, t_node *root)
 		exit(EXIT_FAILURE);
 	}
 	close(pipe_fd[1]);
-	execute(root->left);
+	execute(root->left, copyenv);
 	exit(0);
 }
 
-void	parent_pipeline(int *pipe_fd, t_node *root, int *saved_stdin, pid_t pid)
+void	parent_pipeline(int *pipe_fd, t_node *root, int *saved_stdin, pid_t pid, char **copyenv)
 {
 	int	child_status;
 
@@ -68,13 +68,13 @@ void	parent_pipeline(int *pipe_fd, t_node *root, int *saved_stdin, pid_t pid)
 	if (WIFEXITED(child_status) && WEXITSTATUS(child_status) != 0)
 		return ;
 	if (root->right->type == NODE_PIPE)
-		execute_pipeline(root->right);
+		execute_pipeline(root->right, copyenv);
 	else
-		execute(root->right);
+		execute(root->right, copyenv);
 	restore_fd(STDIN_FILENO, *saved_stdin);
 }
 
-void	execute_redirect_in(t_node *root)
+void	execute_redirect_in(t_node *root, char **copyenv)
 {
 	int	fd;
 	int	saved_stdin;
@@ -83,6 +83,6 @@ void	execute_redirect_in(t_node *root)
 	if (fd == -1)
 		return ;
 	setup_redirection(STDIN_FILENO, fd, &saved_stdin);
-	execute(root->left);
+	execute(root->left, copyenv);
 	restore_fd(STDIN_FILENO, saved_stdin);
 }

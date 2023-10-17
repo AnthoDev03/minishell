@@ -11,17 +11,6 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-void	print_env_vars(void)
-{
-	char	**env;
-
-	env = environ;
-	while (*env)
-	{
-		printf("%s\n", *env);
-		env++;
-	}
-}
 
 char	*create_new_entry(char *key, char *value)
 {
@@ -63,7 +52,7 @@ int	is_key_present(char **env, char *key, int len)
 }
 
 
-void	add_new_env_var(char *key, char *value)
+char	**add_new_env_var(char **env, char *key, char *value)
 {
 	int		count;
 	char	**new_environ;
@@ -71,21 +60,21 @@ void	add_new_env_var(char *key, char *value)
 
 	idx = 0;
 	count = 0;
-	while (environ[count])
+	while (env[count])
 		count++;
 	new_environ = malloc(sizeof(char *) * (count + 2));
 	if (!new_environ)
 	{
 		fprintf(stderr, "Memory allocation failed\n");
-		return;
+		return env; // Retournez l'environnement original en cas d'erreur
 	}
 	while (idx < count)
 	{
-		new_environ[idx] = environ[idx];
+		new_environ[idx] = env[idx];
 		idx++;
 	}
 	new_environ[count] = create_new_entry(key, value);
 	new_environ[count + 1] = NULL;
-	// Do not free the original environ as it may not be dynamically allocated
-	environ = new_environ;
+
+	return new_environ;
 }

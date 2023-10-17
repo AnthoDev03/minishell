@@ -51,13 +51,13 @@ static char	*get_exec_path_from_env(const char *file)
 }
 
 
-int	ft_execvp(const char *file, char *const argv[])
+int	ft_execvp(const char *file, char *const argv[], char **copyenv)
 {
 	char	*complete_path;
 
 	if (access(file, X_OK) == 0)
 	{
-		execve(file, argv, environ);
+		execve(file, argv, copyenv);
 		perror("execve");
 		exit(EXIT_FAILURE);
 	}
@@ -65,7 +65,7 @@ int	ft_execvp(const char *file, char *const argv[])
 	complete_path = get_exec_path_from_env(file);
 	if (complete_path)
 	{
-		execve(complete_path, argv, environ);
+		execve(complete_path, argv, copyenv);
 		perror("execve");
 		free(complete_path);
 		exit(EXIT_FAILURE);

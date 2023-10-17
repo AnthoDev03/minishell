@@ -44,7 +44,7 @@ static void	copy_env_to_expander(t_expander *exp, char *env_value)
 	exp->write_pos += ft_strlen(env_value);
 }
 
-void	expand_env_var(t_expander *exp)
+void	expand_env_var(t_expander *exp, char **copyenv)
 {
 	char	*env_value;
 	char	var_name[256];
@@ -62,7 +62,7 @@ void	expand_env_var(t_expander *exp)
 		*(exp->write_pos)++ = '$';
 		return;
 	}
-	env_value = getenv(var_name);
+  env_value = get_value_from_copyenv(var_name, copyenv);
 	if (env_value)
 	{
 		copy_env_to_expander(exp, env_value);

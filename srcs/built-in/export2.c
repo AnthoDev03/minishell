@@ -11,27 +11,31 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-void	handle_var_set(char *key, char *value)
+void	handle_var_set(char **env, char *key, char *value)
 {
 	int		len;
-	char	**env;
+	char	**env_ptr;
 
 	len = ft_strlen(key);
-	env = environ;
-	while (*env)
+	env_ptr = env;
+	while (*env_ptr)
 	{
-		if (ft_strncmp(*env, key, len) == 0 && (*env)[len] == '=')
+		if (ft_strncmp(*env_ptr, key, len) == 0 && (*env_ptr)[len] == '=')
 		{
-			replace_existing_var(env, key, value);
-			return ;
+			replace_existing_var(env_ptr, key, value);
+			return;
 		}
-		env++;
+		env_ptr++;
 	}
 	if (!is_key_present(env, key, len))
-		add_new_env_var(key, value);
+	{
+		char **new_env = add_new_env_var(env, key, value);
+		// Ici, vous pourriez décider de libérer l'ancien 'env' si nécessaire
+		env = new_env; // Cette ligne peut nécessiter une gestion au niveau supérieur pour mettre à jour la référence.
+	}
 }
 
-void	set_env_var(t_node *commandNode)
+void	set_env_var(t_node *commandNode, char **copyenv)
 {
 	char	*key;
 	char	*equal_sign;
@@ -46,14 +50,16 @@ void	set_env_var(t_node *commandNode)
 	}
 	*equal_sign = '\0';
 	value = equal_sign + 1;
-	handle_var_set(key, value);
+	
+handle_var_set(copyenv, key, value);
+
 	*equal_sign = '=';
 }
 
-void	export_command(t_node *commandNode)
+void	export_command(t_node *commandNode, char **env)
 {
 	if (!commandNode->left || !commandNode->left->value)
-		print_env_vars();
+		env_command(env);
 	else
-		set_env_var(commandNode);
+		set_env_var(commandNode, env);
 }

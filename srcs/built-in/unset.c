@@ -11,12 +11,13 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-char	**find_variable(char *var_name)
-{
-	char	**env;
-	int		len;
 
-	env = environ;
+char **find_variable(char *var_name, char **copyenv)
+{
+	char **env;
+	int len;
+
+	env = copyenv; // Utilisez copyenv au lieu de environ
 	len = ft_strlen(var_name);
 	while (*env)
 	{
@@ -27,9 +28,9 @@ char	**find_variable(char *var_name)
 	return (NULL);
 }
 
-void	shift_env_vars_left(char **start)
+void shift_env_vars_left(char **start)
 {
-	char	**dest;
+	char **dest;
 
 	dest = start;
 	while (*dest)
@@ -39,18 +40,19 @@ void	shift_env_vars_left(char **start)
 	}
 }
 
-void	unset_command(t_node *commandNode)
+void unset_command(t_node *commandNode, char **copyenv) // Ajoutez l'argument copyenv
 {
-	char	*var_name;
-	char	**var_loc;
+	char *var_name;
+	char **var_loc;
 
 	if (commandNode->left == NULL || commandNode->left->value == NULL)
 	{
 		write(2, "unset: missing argument\n", 24);
-		return ;
+		return;
 	}
 	var_name = commandNode->left->value;
-	var_loc = find_variable(var_name);
+	var_loc = find_variable(var_name, copyenv); // Passez copyenv comme argument
 	if (var_loc)
 		shift_env_vars_left(var_loc);
 }
+
