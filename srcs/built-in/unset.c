@@ -14,16 +14,14 @@
 
 char **find_variable(char *var_name, char **copyenv)
 {
-	char **env;
 	int len;
 
-	env = copyenv; // Utilisez copyenv au lieu de environ
 	len = ft_strlen(var_name);
-	while (*env)
+	while (*copyenv)
 	{
-		if (ft_strncmp(*env, var_name, len) == 0 && (*env)[len] == '=')
-			return (env);
-		env++;
+		if (ft_strncmp(*copyenv, var_name, len) == 0 && (*copyenv)[len] == '=')
+			return (copyenv);
+		copyenv++;
 	}
 	return (NULL);
 }

@@ -14,18 +14,16 @@
 void	handle_var_set(char **env, char *key, char *value)
 {
 	int		len;
-	char	**env_ptr;
 
 	len = ft_strlen(key);
-	env_ptr = env;
-	while (*env_ptr)
+	while (*env)
 	{
-		if (ft_strncmp(*env_ptr, key, len) == 0 && (*env_ptr)[len] == '=')
+		if (ft_strncmp(*env, key, len) == 0 && (*env)[len] == '=')
 		{
-			replace_existing_var(env_ptr, key, value);
+			replace_existing_var(env, key, value);
 			return;
 		}
-		env_ptr++;
+		env++;
 	}
 	if (!is_key_present(env, key, len))
 	{
