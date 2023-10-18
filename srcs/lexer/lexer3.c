@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 void	handle_redirect_out(t_lexer *lexer)
 {
 	t_token	t;

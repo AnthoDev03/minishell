@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 void	setup_redirection(int oldfd, int newfd, int *saved)
 {
 	*saved = dup(oldfd);

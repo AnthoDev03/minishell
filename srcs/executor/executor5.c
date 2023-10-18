@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 void	dup_to(int oldfd, int newfd, int *saved)
 {
 	*saved = dup(oldfd);

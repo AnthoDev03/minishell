@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 void	execute_redirect_in_append(t_node *root, char **copyenv)
 {
 	FILE	*tempfile;

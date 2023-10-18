@@ -10,12 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 t_node	*create_node(t_nodetype type, char *value)
 {
 	t_node	*new_node;
 
-	new_node = malloc(sizeof(t_node));
+	new_node = gc_malloc(sizeof(t_node));
 	if (!new_node)
 	{
 		write(1, "Error: Memory allocation failed\n", 29);

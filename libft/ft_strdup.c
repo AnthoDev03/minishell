@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "libft.h"
-
+#include "../gc/gc.h"
 char	*ft_strdup(const char *s)
 {
 	size_t	len;
 	char	*dup_s;
 
 	len = ft_strlen(s);
-	dup_s = (char *)malloc(len + 1);
+	dup_s = (char *)gc_malloc(len + 1);
 	if (dup_s != NULL)
 	{
 		ft_memcpy(dup_s, s, len + 1);

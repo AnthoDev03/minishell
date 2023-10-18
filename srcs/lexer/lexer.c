@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 void	handle_current_char(t_lexer *lexer)
 {
 	if (*(lexer->current) == '\\')
@@ -61,10 +61,10 @@ t_token	*tokenize_with_quotes(char *input)
 {
 	t_lexer	lexer;
 
-	lexer.tokens = malloc(sizeof(t_token) * 100);
+	lexer.tokens = gc_malloc(sizeof(t_token) * 100);
 	lexer.tokencount = 0;
 	lexer.current = input;
-	lexer.buffer = (char *)malloc(strlen(input) + 1);
+	lexer.buffer = (char *)gc_malloc(strlen(input) + 1);
 	lexer.bufidx = 0;
 	lexer.error = 0;
 	while (*(lexer.current) && !lexer.error)

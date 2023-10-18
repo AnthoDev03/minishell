@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 static char	*construct_path(const char *dir, const char *file)
 {
 	char	*exec_path;

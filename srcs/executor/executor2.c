@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 
 static int	handle_builtin_commands(t_node *node, char **copyenvp)
 {
@@ -65,9 +65,9 @@ char **create_args_from_ast(t_node *node) {
         temp = temp->left ? temp->left : temp->right;  // Consider right nodes as well
     }
 
-    char **args = malloc((depth + 1) * sizeof(char *));
+    char **args = gc_malloc((depth + 1) * sizeof(char *));
     if (!args) {
-        perror("malloc");
+        perror("gc_malloc");
         exit(EXIT_FAILURE);
     }
 

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 static void	resize_expander_buffer(t_expander *exp, size_t required_size)
 {
 	char		*new_str;
@@ -20,7 +20,7 @@ static void	resize_expander_buffer(t_expander *exp, size_t required_size)
 	{
 		offset = exp->write_pos - exp->expanded_str;
 		exp->buffer_size *= 2;
-		new_str = malloc(exp->buffer_size);
+		new_str = gc_malloc(exp->buffer_size);
 		if (!new_str)
 		{
 			write(2, "Memory allocation failed\n", 25);

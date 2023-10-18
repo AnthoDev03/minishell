@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 char	*expand_env_variables(char *input, char **copyenv)
 {
 	t_expander	exp;

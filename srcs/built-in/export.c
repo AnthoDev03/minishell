@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 
 char	*create_new_entry(char *key, char *value)
 {
@@ -18,7 +18,7 @@ char	*create_new_entry(char *key, char *value)
 	char	*new_entry;
 
 	len = strlen(key) + strlen(value) + 2;
-	new_entry = malloc(len);
+	new_entry = gc_malloc(len);
 	if (!new_entry)
 	{
 		fprintf(stderr, "Memory allocation failed\n");
@@ -62,7 +62,7 @@ char	**add_new_env_var(char **env, char *key, char *value)
 	count = 0;
 	while (env[count])
 		count++;
-	new_environ = malloc(sizeof(char *) * (count + 2));
+	new_environ = gc_malloc(sizeof(char *) * (count + 2));
 	if (!new_environ)
 	{
 		fprintf(stderr, "Memory allocation failed\n");

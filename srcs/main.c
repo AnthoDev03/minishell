@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
+#include "../gc/gc.h"
 
 int g_sigint_called = 0;
 
@@ -71,6 +72,8 @@ int main(int ac, char **ag, char **environ)
 {
   (void)ac;
   (void)ag;
+
+    gc_init();
     char *input;
 
   char **copyenv = copieEnviron(environ); 
@@ -96,7 +99,8 @@ int main(int ac, char **ag, char **environ)
         process_input_line(input, copyenv);
         free(input);
     }
-  libereEnviron(copyenv);
+
+    gc_free_all();
   
 
     return (0);

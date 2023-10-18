@@ -28,7 +28,6 @@
 
 extern int g_sigint_called;
 char** copieEnviron(char **environOrig);
-void libereEnviron(char **environCopie); 
 // -- -- -- -- -- -- -- -- - LEXER -- -- -- -- -- -- -- -- -- -- -
 
 typedef enum e_token_type

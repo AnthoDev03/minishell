@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 t_nodetype	parse_redirection_type(t_token token)
 {
 	if (token.type == TOKEN_REDIRECT_IN)

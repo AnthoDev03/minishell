@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 void	handle_escape_char(t_lexer *lexer)
 {
 	(lexer->current)++;

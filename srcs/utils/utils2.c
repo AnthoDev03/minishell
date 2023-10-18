@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
+#include "../../gc/gc.h"
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	size_t	i;
@@ -66,14 +66,14 @@ char** copieEnviron(char **environOrig) {
     }
 
     // Allouer de la mémoire pour le nouveau tableau
-    char **copie = (char **)malloc((i + 1) * sizeof(char *));
+    char **copie = (char **)gc_malloc((i + 1) * sizeof(char *));
     if (!copie) {
         perror("Erreur d'allocation mémoire");
         exit(1);
     }
 
     for (int j = 0; j < i; j++) {
-        copie[j] = strdup(environOrig[j]);
+        copie[j] = ft_strdup(environOrig[j]);
         if (!copie[j]) {
             perror("Erreur d'allocation mémoire");
             exit(1);
@@ -85,9 +85,4 @@ char** copieEnviron(char **environOrig) {
     return copie;
 }
 
-void libereEnviron(char **environCopie) {
-    for (int i = 0; environCopie[i]; i++) {
-        free(environCopie[i]);
-    }
-    free(environCopie);
-}
+
