@@ -177,5 +177,7 @@ char				*ft_strcat(char *dest, const char *src);
 void				handle_sigint(int sig);
 void				handle_sigquit(int sig);
 void				initialize_signal_handlers(void);
-
+int					handle_pwd_command(t_node *node);
+int					handle_unset_command(t_node *node, char **copyenvp);
+int					handle_export_command(t_node *node, char **copyenvp);
 #endif

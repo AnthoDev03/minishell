@@ -15,7 +15,7 @@ SRC = srcs/main.c srcs/lexer/lexer.c srcs/parser/parser.c \
 	  srcs/expander/expander2.c srcs/parser/parser2.c srcs/lexer/lexer2.c \
 		srcs/lexer/lexer3.c srcs/executor/executor5.c srcs/utils/utils2.c \
 		srcs/expander/expander3.c gc/gc.c srcs/utils/utils3.c srcs/utils/sigaction.c \
-		srcs/executor/executor6.c
+		srcs/executor/executor6.c srcs/executor/executor7.c
 
 OBJ = $(SRC:.c=.o)
 
