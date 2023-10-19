@@ -13,9 +13,8 @@
 
 static t_garbagecollector	*get_garbage_collector(void)
 {
-	static t_garbagecollector	gc;
+	static t_garbagecollector	gc = {NULL};
 
-	gc.head = NULL;
 	return (&gc);
 }
 
