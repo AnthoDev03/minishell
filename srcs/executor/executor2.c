@@ -79,7 +79,8 @@ char	**create_args_from_ast(t_node *node)
 	temp = node;
 	while (temp)
 	{
-		args[index++] = temp->value;
+		args[index] = temp->value;
+		index++;
 		if (temp->left)
 			temp = temp->left;
 		else

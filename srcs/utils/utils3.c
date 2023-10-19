@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: anthrodr <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -13,48 +13,48 @@
 #include "../../gc/gc.h"
 #include "../../include/minishell.h"
 
-int	get_environ_length(char **environorig)
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	while (s1[i] || s2[i])
+	{
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	return (0);
+}
+
+char	*ft_strcpy(char *dest, char *src)
 {
 	int	i;
 
 	i = 0;
-	while (environorig[i])
+	while (src[i] != '\0')
+	{
+		dest[i] = src[i];
 		i++;
-	return (i);
+	}
+	dest[i] = '\0';
+	return (dest);
 }
 
-char	**alloc_environ_copy(int length)
+char	*ft_strncpy(char *dest, const char *src, unsigned int n)
 {
-	char	**copie;
+	unsigned int	i;
 
-	copie = (char **)gc_malloc((length + 1) * sizeof(char *));
-	if (!copie)
+	i = 0;
+	while (src[i] != '\0' && i < n)
 	{
-		perror("Erreur d'allocation mémoire");
-		exit(1);
+		dest[i] = src[i];
+		++i;
 	}
-	return (copie);
-}
-
-char	**copieenviron(char **environorig)
-{
-	int		i;
-	int		j;
-	char	**copie;
-
-	i = get_environ_length(environorig);
-	copie = alloc_environ_copy(i);
-	j = 0;
-	while (j < i)
+	while (i < n)
 	{
-		copie[j] = ft_strdup(environorig[j]);
-		if (!copie[j])
-		{
-			perror("Erreur d'allocation mémoire");
-			exit(1);
-		}
-		j++;
+		dest[i] = '\0';
+		i++;
 	}
-	copie[i] = NULL;
-	return (copie);
+	return (dest);
 }

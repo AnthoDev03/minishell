@@ -15,19 +15,21 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-void					gc_init(void);
-void					*gc_malloc(size_t size);
-void					gc_free_all(void);
+typedef struct s_memoryblock	t_memoryblock;
 
-typedef struct s_memoryblock
+struct							s_memoryblock
 {
-	void				*addr;
-	struct memoryblock	*next;
-}						t_memoryblock;
+	void						*addr;
+	t_memoryblock				*next;
+};
 
 typedef struct s_garbagecollector
 {
-	memoryblock			*head;
-}						t_garbagecollector;
+	t_memoryblock				*head;
+}								t_garbagecollector;
+
+void							gc_init(void);
+void							*gc_malloc(size_t size);
+void							gc_free_all(void);
 
 #endif

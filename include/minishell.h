@@ -165,4 +165,8 @@ int					ft_execvp(const char *file, char *const argv[],
 char				*ft_strncpy(char *dest, const char *src, unsigned int n);
 char				*ft_strcpy(char *dest, char *src);
 char				*ft_strcat(char *dest, const char *src);
+void				handle_sigint(int sig);
+void				handle_sigquit(int sig);
+void				initialize_signal_handlers(void);
+
 #endif

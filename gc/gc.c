@@ -40,7 +40,7 @@ void	*gc_malloc(size_t size)
 		perror("gc_malloc");
 		exit(EXIT_FAILURE);
 	}
-	new_block = malloc(sizeof(MemoryBlock));
+	new_block = malloc(sizeof(t_memoryblock));
 	if (!new_block)
 	{
 		perror("gc_malloc block");
