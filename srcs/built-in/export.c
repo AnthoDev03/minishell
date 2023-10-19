@@ -30,48 +30,50 @@ char	*create_new_entry(char *key, char *value)
 	return (new_entry);
 }
 
-void	replace_existing_var(char **env, char *key, char *value)
+void	replace_existing_var(t_env *node, char *key, char *value)
 {
 	char	*new_entry;
 
 	new_entry = create_new_entry(key, value);
 	if (new_entry)
-		*env = new_entry;
-}
-
-int	is_key_present(char **env, char *key, int len)
-{
-	while (*env)
 	{
-		if (ft_strncmp(*env, key, len) == 0 && (*env)[len] == '=')
-			return (1);
-		env++;
+		free(node->value);
+		node->value = new_entry;
 	}
-	return (0);
 }
 
-char	**add_new_env_var(char **env, char *key, char *value)
+t_env	*is_key_present(t_env *env_list, char *key, int len)
 {
-	int		count;
-	char	**new_environ;
-	int		idx;
+	while (env_list)
+	{
+		if (ft_strncmp(env_list->value, key, len) == 0
+			&& env_list->value[len] == '=')
+			return (env_list);
+		env_list = env_list->next;
+	}
+	return (NULL);
+}
 
-	idx = 0;
-	count = 0;
-	while (env[count])
-		count++;
-	new_environ = gc_malloc(sizeof(char *) * (count + 2));
-	if (!new_environ)
+void	add_new_env_var(t_env **env_list, char *key, char *value)
+{
+	t_env	*new_node;
+	t_env	*current;
+
+	new_node = gc_malloc(sizeof(t_env));
+	if (!new_node)
 	{
 		write(2, "Memory allocation failed\n", 24);
-		return (env);
+		return ;
 	}
-	while (idx < count)
+	new_node->value = create_new_entry(key, value);
+	new_node->next = NULL;
+	if (!*env_list)
+		*env_list = new_node;
+	else
 	{
-		new_environ[idx] = env[idx];
-		idx++;
+		current = *env_list;
+		while (current->next)
+			current = current->next;
+		current->next = new_node;
 	}
-	new_environ[count] = create_new_entry(key, value);
-	new_environ[count + 1] = NULL;
-	return (new_environ);
 }

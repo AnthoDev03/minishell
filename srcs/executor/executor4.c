@@ -12,7 +12,7 @@
 #include "../../gc/gc.h"
 #include "../../include/minishell.h"
 
-void	execute_redirect_in_append(t_node *root, char **copyenv)
+void	execute_redirect_in_append(t_node *root, t_env *env_list)
 {
 	FILE	*tempfile;
 	int		saved_stdin;
@@ -21,11 +21,11 @@ void	execute_redirect_in_append(t_node *root, char **copyenv)
 	if (!tempfile)
 		return ;
 	setup_redirection(STDIN_FILENO, fileno(tempfile), &saved_stdin);
-	execute(root->right, copyenv);
+	execute(root->right, env_list);
 	cleanup_append_redirection(saved_stdin, tempfile);
 }
 
-void	execute_redirect_out(t_node *root, char **copyenv)
+void	execute_redirect_out(t_node *root, t_env *env_list)
 {
 	int	fd;
 	int	saved_stdout;
@@ -34,11 +34,11 @@ void	execute_redirect_out(t_node *root, char **copyenv)
 	if (fd == -1)
 		return ;
 	setup_redirection(STDOUT_FILENO, fd, &saved_stdout);
-	execute(root->left, copyenv);
+	execute(root->left, env_list);
 	restore_fd(STDOUT_FILENO, saved_stdout);
 }
 
-void	execute_redirect_out_append(t_node *root, char **copyenv)
+void	execute_redirect_out_append(t_node *root, t_env *env_list)
 {
 	int	fd;
 	int	saved_stdout;
@@ -47,7 +47,7 @@ void	execute_redirect_out_append(t_node *root, char **copyenv)
 	if (fd == -1)
 		return ;
 	setup_redirection(STDOUT_FILENO, fd, &saved_stdout);
-	execute(root->left, copyenv);
+	execute(root->left, env_list);
 	restore_fd(STDOUT_FILENO, saved_stdout);
 }
 

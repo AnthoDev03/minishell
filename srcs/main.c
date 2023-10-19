@@ -14,7 +14,7 @@
 
 int		g_sigint_called = 0;
 
-void	process_input_line(char *input, char **copyenv)
+void	process_input_line(char *input, t_env *env_list)
 {
 	t_token	*tokens;
 	t_node	*root;
@@ -25,18 +25,18 @@ void	process_input_line(char *input, char **copyenv)
 		exit(0);
 	}
 	add_history(input);
-	input = expand_env_variables(input, copyenv);
+	input = expand_env_variables(input, env_list);
 	tokens = tokenize_with_quotes(input);
 	if (tokens != NULL)
 	{
 		root = parse(tokens);
-		execute(root, copyenv);
+		execute(root, env_list);
 		free_tree(root);
 	}
 	free(input);
 }
 
-void	loop_minishell(char **copyenv)
+void	loop_minishell(t_env *copyenv)
 {
 	char	*input;
 
@@ -61,14 +61,14 @@ void	loop_minishell(char **copyenv)
 
 int	main(int ac, char **ag, char **environ)
 {
-	char	**copyenv;
+	t_env	*env_list;
 
 	(void)ac;
 	(void)ag;
 	gc_init();
-	copyenv = copieenviron(environ);
+	env_list = copy_environ_to_list(environ);
 	initialize_signal_handlers();
-	loop_minishell(copyenv);
+	loop_minishell(env_list);
 	gc_free_all();
 	return (0);
 }

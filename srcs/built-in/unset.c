@@ -12,44 +12,61 @@
 #include "../../gc/gc.h"
 #include "../../include/minishell.h"
 
-char	**find_variable(char *var_name, char **copyenv)
+t_env	*find_variable(char *var_name, t_env *env_list)
 {
 	int	len;
 
 	len = ft_strlen(var_name);
-	while (*copyenv)
+	while (env_list)
 	{
-		if (ft_strncmp(*copyenv, var_name, len) == 0 && (*copyenv)[len] == '=')
-			return (copyenv);
-		copyenv++;
+		if (ft_strncmp(env_list->value, var_name, len) == 0
+			&& env_list->value[len] == '=')
+			return (env_list);
+		env_list = env_list->next;
 	}
 	return (NULL);
 }
 
-void	shift_env_vars_left(char **start)
+void	remove_env_var(t_env **head, t_env *target)
 {
-	char	**dest;
+	t_env	*prev;
+	t_env	*curr;
 
-	dest = start;
-	while (*dest)
+	if (!*head || !target)
+		return ;
+	if (*head == target)
 	{
-		*dest = *(dest + 1);
-		dest++;
+		*head = (*head)->next;
+		free(target->value);
+		free(target);
+		return ;
 	}
+	prev = NULL;
+	curr = *head;
+	while (curr != NULL && curr != target)
+	{
+		prev = curr;
+		curr = curr->next;
+	}
+	if (curr == NULL)
+		return ;
+	prev->next = curr->next;
+	free(curr->value);
+	free(curr);
 }
 
-void	unset_command(t_node *commandNode, char **copyenv)
+void	unset_command(t_node *commandnode, t_env **env_list)
 {
 	char	*var_name;
-	char	**var_loc;
+	t_env	*var_loc;
 
-	if (commandNode->left == NULL || commandNode->left->value == NULL)
+	if (commandnode->left == NULL || commandnode->left->value == NULL)
 	{
 		write(2, "unset: missing argument\n", 24);
 		return ;
 	}
-	var_name = commandNode->left->value;
-	var_loc = find_variable(var_name, copyenv);
+	var_name = commandnode->left->value;
+	var_loc = find_variable(var_name, *env_list);
 	if (var_loc)
-		shift_env_vars_left(var_loc);
+		remove_env_var(env_list, var_loc);
 }

@@ -66,22 +66,22 @@ void	cleanup_append_redirection(int saved_stdin, FILE *tempfile)
 	fclose(tempfile);
 }
 
-void	execute(t_node *root, char **copyenv)
+void	execute(t_node *root, t_env *env_list)
 {
 	if (!root)
 		return ;
 	if (root->type == NODE_COMMAND)
-		execute_command(root, copyenv);
+		execute_command(root, env_list);
 	else if (root->type == NODE_PIPE)
-		execute_pipeline(root, copyenv);
+		execute_pipeline(root, env_list);
 	else if (root->type == NODE_REDIRECT_IN)
-		execute_redirect_in(root, copyenv);
+		execute_redirect_in(root, env_list);
 	else if (root->type == NODE_REDIRECT_OUT)
-		execute_redirect_out(root, copyenv);
+		execute_redirect_out(root, env_list);
 	else if (root->type == NODE_REDIRECT_IN_APPEND)
-		execute_redirect_in_append(root, copyenv);
+		execute_redirect_in_append(root, env_list);
 	else if (root->type == NODE_REDIRECT_OUT_APPEND)
-		execute_redirect_out_append(root, copyenv);
+		execute_redirect_out_append(root, env_list);
 	else
 		write(2, "Error: Unknown node type\n", 23);
 }

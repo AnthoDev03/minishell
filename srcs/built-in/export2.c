@@ -12,29 +12,20 @@
 #include "../../gc/gc.h"
 #include "../../include/minishell.h"
 
-void	handle_var_set(char **env, char *key, char *value)
+void	handle_var_set(t_env **env_list, char *key, char *value)
 {
 	int		len;
-	char	**new_env;
+	t_env	*existing_var;
 
 	len = ft_strlen(key);
-	while (*env)
-	{
-		if (ft_strncmp(*env, key, len) == 0 && (*env)[len] == '=')
-		{
-			replace_existing_var(env, key, value);
-			return ;
-		}
-		env++;
-	}
-	if (!is_key_present(env, key, len))
-	{
-		new_env = add_new_env_var(env, key, value);
-		env = new_env;
-	}
+	existing_var = is_key_present(*env_list, key, len);
+	if (existing_var)
+		replace_existing_var(existing_var, key, value);
+	else
+		add_new_env_var(env_list, key, value);
 }
 
-void	set_env_var(t_node *commandNode, char **copyenv)
+void	set_env_var(t_node *commandNode, t_env **env_list)
 {
 	char	*key;
 	char	*equal_sign;
@@ -49,14 +40,14 @@ void	set_env_var(t_node *commandNode, char **copyenv)
 	}
 	*equal_sign = '\0';
 	value = equal_sign + 1;
-	handle_var_set(copyenv, key, value);
+	handle_var_set(env_list, key, value);
 	*equal_sign = '=';
 }
 
-void	export_command(t_node *commandNode, char **env)
+void	export_command(t_node *commandNode, t_env *env_list)
 {
 	if (!commandNode->left || !commandNode->left->value)
-		env_command(env);
+		env_command(env_list);
 	else
-		set_env_var(commandNode, env);
+		set_env_var(commandNode, &env_list);
 }

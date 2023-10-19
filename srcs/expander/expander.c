@@ -12,7 +12,7 @@
 #include "../../gc/gc.h"
 #include "../../include/minishell.h"
 
-char	*expand_env_variables(char *input, char **copyenv)
+char	*expand_env_variables(char *input, t_env *env_list)
 {
 	t_expander	exp;
 
@@ -28,7 +28,7 @@ char	*expand_env_variables(char *input, char **copyenv)
 		else if (*(exp.current) == '$' && (exp.in_double_quotes
 				|| (!exp.in_single_quotes && !exp.in_double_quotes))
 			&& (exp.current == input || *(exp.current - 1) != '\\'))
-			expand_env_var(&exp, copyenv);
+			expand_env_var(&exp, env_list);
 		else
 			*(exp.write_pos)++ = *(exp.current)++;
 	}
@@ -36,19 +36,17 @@ char	*expand_env_variables(char *input, char **copyenv)
 	return (exp.expanded_str);
 }
 
-char	*get_value_from_copyenv(char *var_name, char **copyenv)
+char	*get_value_from_env_list(char *var_name, t_env *env_list)
 {
-	int		i;
 	size_t	name_len;
 
 	name_len = ft_strlen(var_name);
-	i = 0;
-	while (copyenv[i])
+	while (env_list)
 	{
-		if (ft_strncmp(copyenv[i], var_name, name_len) == 0
-			&& copyenv[i][name_len] == '=')
-			return (copyenv[i] + name_len + 1);
-		i++;
+		if (ft_strncmp(env_list->value, var_name, name_len) == 0
+			&& env_list->value[name_len] == '=')
+			return (env_list->value + name_len + 1);
+		env_list = env_list->next;
 	}
 	return (NULL);
 }

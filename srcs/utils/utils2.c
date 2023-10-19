@@ -23,38 +23,56 @@ int	get_environ_length(char **environorig)
 	return (i);
 }
 
-char	**alloc_environ_copy(int length)
+t_env	*alloc_env_node(void)
 {
-	char	**copie;
+	t_env	*new_node;
 
-	copie = (char **)gc_malloc((length + 1) * sizeof(char *));
-	if (!copie)
+	new_node = (t_env *)gc_malloc(sizeof(t_env));
+	if (!new_node)
 	{
 		perror("Erreur d'allocation mémoire");
 		exit(1);
 	}
-	return (copie);
+	new_node->value = NULL;
+	new_node->next = NULL;
+	return (new_node);
 }
 
-char	**copieenviron(char **environorig)
+static t_env	*add_env_node_to_list(t_env *head, char *value)
+{
+	t_env	*new_node;
+	t_env	*current;
+
+	new_node = alloc_env_node();
+	new_node->value = ft_strdup(value);
+	if (!new_node->value)
+	{
+		perror("Erreur d'allocation mémoire");
+		exit(1);
+	}
+	if (!head)
+	{
+		head = new_node;
+		return (head);
+	}
+	current = head;
+	while (current->next)
+		current = current->next;
+	current->next = new_node;
+	return (head);
+}
+
+t_env	*copy_environ_to_list(char **environorig)
 {
 	int		i;
-	int		j;
-	char	**copie;
+	t_env	*head;
 
-	i = get_environ_length(environorig);
-	copie = alloc_environ_copy(i);
-	j = 0;
-	while (j < i)
+	head = NULL;
+	i = 0;
+	while (environorig[i])
 	{
-		copie[j] = ft_strdup(environorig[j]);
-		if (!copie[j])
-		{
-			perror("Erreur d'allocation mémoire");
-			exit(1);
-		}
-		j++;
+		head = add_env_node_to_list(head, environorig[i]);
+		i++;
 	}
-	copie[i] = NULL;
-	return (copie);
+	return (head);
 }

@@ -20,7 +20,7 @@ int	wait_for_child(pid_t pid)
 	return (status);
 }
 
-void	execute_pipeline(t_node *root, char **copyenv)
+void	execute_pipeline(t_node *root, t_env *env_list)
 {
 	int				pipe_fd[2];
 	int				saved_stdin;
@@ -32,7 +32,7 @@ void	execute_pipeline(t_node *root, char **copyenv)
 	data.pipe_fd = pipe_fd;
 	data.root = root;
 	data.saved_stdin = &saved_stdin;
-	data.copyenv = copyenv;
+	data.env_list = env_list;
 	if (pid == -1)
 	{
 		perror("fork");
@@ -40,12 +40,12 @@ void	execute_pipeline(t_node *root, char **copyenv)
 		return ;
 	}
 	else if (pid == 0)
-		child_pipeline(pipe_fd, root, copyenv);
+		child_pipeline(pipe_fd, root, env_list);
 	else
 		parent_pipeline(pid, &data);
 }
 
-void	child_pipeline(int *pipe_fd, t_node *root, char **copyenv)
+void	child_pipeline(int *pipe_fd, t_node *root, t_env *env_list)
 {
 	close(pipe_fd[0]);
 	if (dup2(pipe_fd[1], STDOUT_FILENO) == -1)
@@ -54,7 +54,7 @@ void	child_pipeline(int *pipe_fd, t_node *root, char **copyenv)
 		exit(EXIT_FAILURE);
 	}
 	close(pipe_fd[1]);
-	execute(root->left, copyenv);
+	execute(root->left, env_list);
 	exit(0);
 }
 
@@ -74,13 +74,13 @@ void	parent_pipeline(pid_t pid, t_pipeline_data *data)
 	if (WIFEXITED(child_status) && WEXITSTATUS(child_status) != 0)
 		return ;
 	if (data->root->right->type == NODE_PIPE)
-		execute_pipeline(data->root->right, data->copyenv);
+		execute_pipeline(data->root->right, data->env_list);
 	else
-		execute(data->root->right, data->copyenv);
+		execute(data->root->right, data->env_list);
 	restore_fd(STDIN_FILENO, *(data->saved_stdin));
 }
 
-void	execute_redirect_in(t_node *root, char **copyenv)
+void	execute_redirect_in(t_node *root, t_env *env_list)
 {
 	int	fd;
 	int	saved_stdin;
@@ -89,6 +89,6 @@ void	execute_redirect_in(t_node *root, char **copyenv)
 	if (fd == -1)
 		return ;
 	setup_redirection(STDIN_FILENO, fd, &saved_stdin);
-	execute(root->left, copyenv);
+	execute(root->left, env_list);
 	restore_fd(STDIN_FILENO, saved_stdin);
 }

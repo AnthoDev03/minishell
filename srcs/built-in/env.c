@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-void	env_command(char **env)
+void	env_command(t_env *env_list)
 {
-	while (*env)
+	while (env_list)
 	{
-		printf("%s\n", *env);
-		env++;
+		printf("%s\n", env_list->value);
+		env_list = env_list->next;
 	}
 }

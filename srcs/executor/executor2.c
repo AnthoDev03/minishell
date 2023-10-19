@@ -65,14 +65,50 @@ char	**create_args_from_ast(t_node *node)
 	return (populate_args_from_ast(args, node, depth));
 }
 
-static void	execute_external_command(t_node *node, char **copyenv)
+static char	**convert_env_list_to_array(t_env *env_list)
+{
+	int		count;
+	t_env	*tmp;
+	char	**env_array;
+	int		i;
+
+	count = 0;
+	tmp = env_list;
+	while (tmp)
+	{
+		count++;
+		tmp = tmp->next;
+	}
+	env_array = gc_malloc(sizeof(char *) * (count + 1));
+	if (!env_array)
+		return (NULL);
+	i = 0;
+	tmp = env_list;
+	while (tmp)
+	{
+		env_array[i] = tmp->value;
+		i++;
+		tmp = tmp->next;
+	}
+	env_array[i] = NULL;
+	return (env_array);
+}
+
+void	execute_external_command(t_node *node, t_env *env_list)
 {
 	pid_t	pid;
 	char	**args;
+	char	**converted_env;
 
 	args = create_args_from_ast(node);
 	if (node->left)
 		args[1] = node->left->value;
+	converted_env = convert_env_list_to_array(env_list);
+	if (!converted_env)
+	{
+		perror("Memory allocation failed");
+		return ;
+	}
 	pid = fork();
 	if (pid < 0)
 	{
@@ -81,14 +117,8 @@ static void	execute_external_command(t_node *node, char **copyenv)
 	}
 	if (pid == 0)
 	{
-		ft_execvp(args[0], args, copyenv);
+		ft_execvp(args[0], args, converted_env);
 		exit(EXIT_FAILURE);
 	}
 	wait_for_child(pid);
-}
-
-void	execute_command(t_node *node, char **copyenv)
-{
-	if (!handle_builtin_commands(node, copyenv))
-		execute_external_command(node, copyenv);
 }

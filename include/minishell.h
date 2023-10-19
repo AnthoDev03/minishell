@@ -27,7 +27,12 @@
 # define TMP_FILENAME "/tmp/my_temp_file"
 
 extern int			g_sigint_called;
-char				**copieenviron(char **environorig);
+typedef struct s_env
+{
+	char			*value;
+	struct s_env	*next;
+}					t_env;
+t_env				*copy_environ_to_list(char **environorig);
 // -- -- -- -- -- -- -- -- - LEXER -- -- -- -- -- -- -- -- -- -- -
 
 typedef enum e_token_type
@@ -99,7 +104,7 @@ t_node				*parse_pipeline(t_token *tokens, int *index);
 t_node				*parse(t_token *tokens);
 void				free_tree(t_node *root);
 //-- -- -- -- -- -- -- -- -- -- EXPANDER -- -- -- -- -- -- -- -- -- --
-char				*get_value_from_copyenv(char *var_name, char **copyenv);
+char				*get_value_from_env_list(char *var_name, t_env *env_list);
 typedef struct s_expander
 {
 	const char		*current;
@@ -113,32 +118,32 @@ void				init_expander(t_expander *exp, char *input);
 void				handle_single_quote(t_expander *exp);
 void				handle_double_quote(t_expander *exp);
 void				get_env_var_name(t_expander *exp, char *var_name);
-void				expand_env_var(t_expander *exp, char **copyenv);
-char				*expand_env_variables(char *input, char **copyenv);
+void				expand_env_var(t_expander *exp, t_env *env_list);
+char				*expand_env_variables(char *input, t_env *env_list);
 //------------------------------EXECUTOR-------------------------------
 typedef struct s_pipeline_data
 {
 	int				*pipe_fd;
 	t_node			*root;
 	int				*saved_stdin;
-	char			**copyenv;
+	t_env			*env_list;
 }					t_pipeline_data;
-void				execute(t_node *root, char **copyenv);
+void				execute(t_node *root, t_env *env_list);
 void				cleanup_append_redirection(int saved_stdin, FILE *tempfile);
 FILE				*setup_append_redirection(char *delimiter);
 void				setup_redirection(int oldfd, int newfd, int *saved);
 int					open_file_append(const char *path);
 int					open_file_write(const char *path);
 int					open_file_read(const char *path);
-void				execute_redirect_out_append(t_node *root, char **copyenv);
-void				execute_redirect_out(t_node *root, char **copyenv);
-void				execute_redirect_in_append(t_node *root, char **copyenv);
-void				execute_redirect_in(t_node *root, char **copyenv);
+void				execute_redirect_out_append(t_node *root, t_env *env_list);
+void				execute_redirect_out(t_node *root, t_env *env_list);
+void				execute_redirect_in_append(t_node *root, t_env *env_list);
+void				execute_redirect_in(t_node *root, t_env *env_list);
 void				parent_pipeline(pid_t pid, t_pipeline_data *data);
-void				child_pipeline(int *pipe_fd, t_node *root, char **copyenv);
-void				execute_pipeline(t_node *root, char **copyenv);
+void				child_pipeline(int *pipe_fd, t_node *root, t_env *env_list);
+void				execute_pipeline(t_node *root, t_env *env_list);
 int					wait_for_child(pid_t pid);
-void				execute_command(t_node *node, char **copyenv);
+void				execute_command(t_node *node, t_env *env_list);
 void				setup_pipe(int *pipe_fd);
 void				restore_fd(int oldfd, int saved);
 void				close_pipes(int *pipe_fd);
@@ -147,24 +152,26 @@ char				**create_args_from_ast(t_node *node);
 int					calculate_ast_depth(t_node *node);
 char				**populate_args_from_ast(char **args, t_node *node,
 						int depth);
-int					handle_builtin_commands(t_node *node, char **copyenvp);
+int					handle_builtin_commands(t_node *node, t_env *env_list);
+void				execute_external_command(t_node *node, t_env *env_list);
 //------------------------------BUILTINS-------------------------------
 
 void				cd_command(t_node *commandnode);
 void				echo_command(t_node *commandnode);
 void				pwd_command(void);
 
-void				export_command(t_node *commandnode, char **env);
+void				export_command(t_node *commandNode, t_env *env_list);
 void				print_env_vars(void);
 char				*create_new_entry(char *key, char *value);
-void				replace_existing_var(char **env, char *key, char *value);
-int					is_key_present(char **env, char *key, int len);
-char				**add_new_env_var(char **env, char *key, char *value);
-void				handle_var_set(char **env, char *key, char *value);
-void				set_env_var(t_node *commandnode, char **copyenv);
+void				replace_existing_var(t_env *env_list, char *key,
+						char *value);
+t_env				*is_key_present(t_env *env_list, char *key, int len);
+void				add_new_env_var(t_env **env_list, char *key, char *value);
+void				handle_var_set(t_env **env_list, char *key, char *value);
+void				set_env_var(t_node *commandnode, t_env **env_list);
 
-void				unset_command(t_node *commandnode, char **copyenv);
-void				env_command(char **env);
+void				unset_command(t_node *commandnode, t_env **env_list);
+void				env_command(t_env *env_list);
 void				exit_command(void);
 
 //-----------------------------UTILS------------------------------------
@@ -178,6 +185,6 @@ void				handle_sigint(int sig);
 void				handle_sigquit(int sig);
 void				initialize_signal_handlers(void);
 int					handle_pwd_command(t_node *node);
-int					handle_unset_command(t_node *node, char **copyenvp);
-int					handle_export_command(t_node *node, char **copyenvp);
+int					handle_unset_command(t_node *node, t_env *env_list);
+int					handle_export_command(t_node *node, t_env *env_list);
 #endif
