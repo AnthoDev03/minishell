@@ -9,11 +9,13 @@
 /*   Updated: 2023/10/09 11:33:51 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 void	handle_var_set(char **env, char *key, char *value)
 {
 	int		len;
+	char	**new_env;
 
 	len = ft_strlen(key);
 	while (*env)
@@ -21,15 +23,14 @@ void	handle_var_set(char **env, char *key, char *value)
 		if (ft_strncmp(*env, key, len) == 0 && (*env)[len] == '=')
 		{
 			replace_existing_var(env, key, value);
-			return;
+			return ;
 		}
 		env++;
 	}
 	if (!is_key_present(env, key, len))
 	{
-		char **new_env = add_new_env_var(env, key, value);
-		// Ici, vous pourriez décider de libérer l'ancien 'env' si nécessaire
-		env = new_env; // Cette ligne peut nécessiter une gestion au niveau supérieur pour mettre à jour la référence.
+		new_env = add_new_env_var(env, key, value);
+		env = new_env;
 	}
 }
 
@@ -48,9 +49,7 @@ void	set_env_var(t_node *commandNode, char **copyenv)
 	}
 	*equal_sign = '\0';
 	value = equal_sign + 1;
-	
-handle_var_set(copyenv, key, value);
-
+	handle_var_set(copyenv, key, value);
 	*equal_sign = '=';
 }
 

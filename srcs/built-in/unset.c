@@ -9,12 +9,12 @@
 /*   Updated: 2023/10/09 11:34:35 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
 
-char **find_variable(char *var_name, char **copyenv)
+char	**find_variable(char *var_name, char **copyenv)
 {
-	int len;
+	int	len;
 
 	len = ft_strlen(var_name);
 	while (*copyenv)
@@ -26,9 +26,9 @@ char **find_variable(char *var_name, char **copyenv)
 	return (NULL);
 }
 
-void shift_env_vars_left(char **start)
+void	shift_env_vars_left(char **start)
 {
-	char **dest;
+	char	**dest;
 
 	dest = start;
 	while (*dest)
@@ -38,19 +38,18 @@ void shift_env_vars_left(char **start)
 	}
 }
 
-void unset_command(t_node *commandNode, char **copyenv) // Ajoutez l'argument copyenv
+void	unset_command(t_node *commandNode, char **copyenv)
 {
-	char *var_name;
-	char **var_loc;
+	char	*var_name;
+	char	**var_loc;
 
 	if (commandNode->left == NULL || commandNode->left->value == NULL)
 	{
 		write(2, "unset: missing argument\n", 24);
-		return;
+		return ;
 	}
 	var_name = commandNode->left->value;
-	var_loc = find_variable(var_name, copyenv); // Passez copyenv comme argument
+	var_loc = find_variable(var_name, copyenv);
 	if (var_loc)
 		shift_env_vars_left(var_loc);
 }
-

@@ -9,8 +9,9 @@
 /*   Updated: 2023/10/09 11:50:44 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 void	handle_current_char(t_lexer *lexer)
 {
 	if (*(lexer->current) == '\\')

@@ -9,8 +9,9 @@
 /*   Updated: 2023/10/09 11:37:32 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 static void	resize_expander_buffer(t_expander *exp, size_t required_size)
 {
 	char		*new_str;
@@ -50,21 +51,17 @@ void	expand_env_var(t_expander *exp, char **copyenv)
 	char	var_name[256];
 
 	get_env_var_name(exp, var_name);
-	// Check if var_name is "?"
 	if (ft_strcmp(var_name, "?") == 0)
 	{
 		copy_env_to_expander(exp, "0");
-		return;
+		return ;
 	}
-	// If var_name is empty, it means it was just a lone $
 	if (ft_strlen(var_name) == 0)
 	{
 		*(exp->write_pos)++ = '$';
-		return;
+		return ;
 	}
-  env_value = get_value_from_copyenv(var_name, copyenv);
+	env_value = get_value_from_copyenv(var_name, copyenv);
 	if (env_value)
-	{
 		copy_env_to_expander(exp, env_value);
-	}
 }

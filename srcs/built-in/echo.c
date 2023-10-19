@@ -21,13 +21,13 @@ void	print_node(t_node *node)
 	print_node(node->right);
 }
 
-void	echo_command(t_node *commandNode)
+void	echo_command(t_node *commandnode)
 {
 	t_node	*argnode;
 	int		newline;
 
 	newline = 1;
-	argnode = commandNode->left;
+	argnode = commandnode->left;
 	while (argnode != NULL && ft_strcmp(argnode->value, "-n") == 0)
 	{
 		newline = 0;

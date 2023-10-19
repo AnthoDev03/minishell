@@ -9,8 +9,8 @@
 /*   Updated: 2023/10/09 11:35:34 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
 
 static int	handle_builtin_commands(t_node *node, char **copyenvp)
 {
@@ -52,46 +52,49 @@ static int	handle_builtin_commands(t_node *node, char **copyenvp)
 	return (0);
 }
 
+char	**create_args_from_ast(t_node *node)
+{
+	int		depth;
+	t_node	*temp;
+	char	**args;
+	int		index;
 
-
-
-char **create_args_from_ast(t_node *node) {
-    int depth = 0;
-    t_node *temp = node;
-
-    // Count the depth of the tree.
-    while (temp) {
-        depth++;
-        temp = temp->left ? temp->left : temp->right;  // Consider right nodes as well
-    }
-
-    char **args = gc_malloc((depth + 1) * sizeof(char *));
-    if (!args) {
-        perror("gc_malloc");
-        exit(EXIT_FAILURE);
-    }
-
-    int index = 0;
-
-    // Traverse the tree again and store command/arguments in args[].
-    temp = node;
-    while (temp) {
-        args[index++] = temp->value;
-        temp = temp->left ? temp->left : temp->right;  // Consider right nodes as well
-    }
-
-    args[index] = NULL;
-
-    return args;
+	depth = 0;
+	temp = node;
+	while (temp)
+	{
+		depth++;
+		if (temp->left)
+			temp = temp->left;
+		else
+			temp = temp->right;
+	}
+	args = gc_malloc((depth + 1) * sizeof(char *));
+	if (!args)
+	{
+		perror("gc_malloc");
+		exit(EXIT_FAILURE);
+	}
+	index = 0;
+	temp = node;
+	while (temp)
+	{
+		args[index++] = temp->value;
+		if (temp->left)
+			temp = temp->left;
+		else
+			temp = temp->right;
+	}
+	args[index] = NULL;
+	return (args);
 }
-
-
-
 
 static void	execute_external_command(t_node *node, char **copyenv)
 {
 	pid_t	pid;
-	char **args = create_args_from_ast(node);
+	char	**args;
+
+	args = create_args_from_ast(node);
 	if (node->left)
 		args[1] = node->left->value;
 	pid = fork();

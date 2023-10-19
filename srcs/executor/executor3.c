@@ -9,8 +9,9 @@
 /*   Updated: 2023/10/09 11:35:50 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 int	wait_for_child(pid_t pid)
 {
 	int	status;
@@ -52,7 +53,8 @@ void	child_pipeline(int *pipe_fd, t_node *root, char **copyenv)
 	exit(0);
 }
 
-void	parent_pipeline(int *pipe_fd, t_node *root, int *saved_stdin, pid_t pid, char **copyenv)
+void	parent_pipeline(int *pipe_fd, t_node *root, int *saved_stdin, pid_t pid,
+		char **copyenv)
 {
 	int	child_status;
 

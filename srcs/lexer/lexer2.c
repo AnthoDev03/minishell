@@ -9,16 +9,15 @@
 /*   Updated: 2023/10/09 11:52:24 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 void	handle_escape_char(t_lexer *lexer)
 {
 	(lexer->current)++;
 	if (*(lexer->current) == '"' || *(lexer->current) == '\''
 		|| *(lexer->current) == '\\')
-	{
 		lexer->buffer[(lexer->bufidx)++] = *(lexer->current)++;
-	}
 	else
 	{
 		lexer->buffer[(lexer->bufidx)++] = '\\';
@@ -63,13 +62,9 @@ void	handle_space_char(t_lexer *lexer)
 		lexer->buffer[lexer->bufidx] = '\0';
 		t.value = ft_strdup(lexer->buffer);
 		if (lexer->tokencount == 0)
-		{
 			t.type = TOKEN_COMMAND;
-		}
 		else
-		{
 			t.type = TOKEN_ARGUMENT;
-		}
 		lexer->tokens[(lexer->tokencount)++] = t;
 		lexer->bufidx = 0;
 	}

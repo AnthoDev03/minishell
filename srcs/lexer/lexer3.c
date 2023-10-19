@@ -9,8 +9,9 @@
 /*   Updated: 2023/10/09 11:52:04 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 void	handle_redirect_out(t_lexer *lexer)
 {
 	t_token	t;
@@ -38,13 +39,9 @@ void	handle_token_end(t_lexer *lexer)
 		lexer->buffer[lexer->bufidx] = '\0';
 		t.value = ft_strdup(lexer->buffer);
 		if (lexer->tokencount == 0)
-		{
 			t.type = TOKEN_COMMAND;
-		}
 		else
-		{
 			t.type = TOKEN_ARGUMENT;
-		}
 		lexer->tokens[(lexer->tokencount)++] = t;
 		lexer->bufidx = 0;
 	}

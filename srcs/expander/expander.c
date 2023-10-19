@@ -9,8 +9,9 @@
 /*   Updated: 2023/10/09 11:37:13 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 char	*expand_env_variables(char *input, char **copyenv)
 {
 	t_expander	exp;
@@ -35,16 +36,19 @@ char	*expand_env_variables(char *input, char **copyenv)
 	return (exp.expanded_str);
 }
 
-char *get_value_from_copyenv(char *var_name, char **copyenv)
+char	*get_value_from_copyenv(char *var_name, char **copyenv)
 {
-    int i = 0;
-    size_t name_len = ft_strlen(var_name);
+	int		i;
+	size_t	name_len;
 
-    while (copyenv[i])
-    {
-        if (ft_strncmp(copyenv[i], var_name, name_len) == 0 && copyenv[i][name_len] == '=')
-            return (copyenv[i] + name_len + 1);
-        i++;
-    }
-    return NULL;
+	name_len = ft_strlen(var_name);
+	i = 0;
+	while (copyenv[i])
+	{
+		if (ft_strncmp(copyenv[i], var_name, name_len) == 0
+			&& copyenv[i][name_len] == '=')
+			return (copyenv[i] + name_len + 1);
+		i++;
+	}
+	return (NULL);
 }

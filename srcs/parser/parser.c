@@ -9,8 +9,9 @@
 /*   Updated: 2023/10/09 11:38:00 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 t_nodetype	parse_redirection_type(t_token token)
 {
 	if (token.type == TOKEN_REDIRECT_IN)

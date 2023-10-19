@@ -9,8 +9,9 @@
 /*   Updated: 2023/10/09 11:36:02 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 void	execute_redirect_in_append(t_node *root, char **copyenv)
 {
 	FILE	*tempfile;

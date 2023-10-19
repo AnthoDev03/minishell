@@ -9,8 +9,9 @@
 /*   Updated: 2023/10/09 11:38:36 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 static char	*construct_path(const char *dir, const char *file)
 {
 	char	*exec_path;
@@ -50,7 +51,6 @@ static char	*get_exec_path_from_env(const char *file)
 	return (NULL);
 }
 
-
 int	ft_execvp(const char *file, char *const argv[], char **copyenv)
 {
 	char	*complete_path;
@@ -61,7 +61,6 @@ int	ft_execvp(const char *file, char *const argv[], char **copyenv)
 		perror("execve");
 		exit(EXIT_FAILURE);
 	}
-
 	complete_path = get_exec_path_from_env(file);
 	if (complete_path)
 	{
@@ -70,8 +69,23 @@ int	ft_execvp(const char *file, char *const argv[], char **copyenv)
 		free(complete_path);
 		exit(EXIT_FAILURE);
 	}
-
 	perror("ft_execvp");
 	return (-1);
 }
 
+char	*ft_strcat(char *dest, const char *src)
+{
+	char	*ptr;
+
+	ptr = dest;
+	while (*ptr)
+		ptr++;
+	while (*src)
+	{
+		*ptr = *src;
+		ptr++;
+		src++;
+	}
+	*ptr = '\0';
+	return (dest);
+}

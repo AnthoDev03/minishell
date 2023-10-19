@@ -9,20 +9,20 @@
 /*   Updated: 2023/10/09 12:01:05 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/minishell.h"
 #include "../gc/gc.h"
+#include "../include/minishell.h"
 
-int g_sigint_called = 0;
+int		g_sigint_called = 0;
 
-void handle_sigint(int sig)
+void	handle_sigint(int sig)
 {
-    (void)sig;
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    write(STDOUT_FILENO, "\nminishell> ", 12);
-    rl_on_new_line_with_prompt();
-    rl_redisplay();
-    g_sigint_called = 1;
+	(void)sig;
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	write(STDOUT_FILENO, "\nminishell> ", 12);
+	rl_on_new_line_with_prompt();
+	rl_redisplay();
+	g_sigint_called = 1;
 }
 
 void	handle_sigquit(int sig)
@@ -67,42 +67,33 @@ void	process_input_line(char *input, char **copyenv)
 	free(input);
 }
 
-
-int main(int ac, char **ag, char **environ)
+int	main(int ac, char **ag, char **environ)
 {
-  (void)ac;
-  (void)ag;
+	char	*input;
+	char	**copyenv;
 
-    gc_init();
-    char *input;
-
-  char **copyenv = copieEnviron(environ); 
-
-    initialize_signal_handlers();
-
-    while (1)
-    {
-        if (!g_sigint_called)
-            input = readline("minishell> ");
-        else
-        {
-            input = readline("");
-            g_sigint_called = 0;
-        }
-
-        if (!input)
-        {
-            write(STDOUT_FILENO, "", 0);
-            exit(0);
-        }
-
-        process_input_line(input, copyenv);
-        free(input);
-    }
-
-    gc_free_all();
-  
-
-    return (0);
+	(void)ac;
+	(void)ag;
+	gc_init();
+	copyenv = copieenviron(environ);
+	initialize_signal_handlers();
+	while (1)
+	{
+		if (!g_sigint_called)
+			input = readline("minishell> ");
+		else
+		{
+			input = readline("");
+			g_sigint_called = 0;
+		}
+		if (!input)
+		{
+			write(STDOUT_FILENO, "", 0);
+			exit(0);
+		}
+		process_input_line(input, copyenv);
+		free(input);
+	}
+	gc_free_all();
+	return (0);
 }
-

@@ -9,8 +9,9 @@
 /*   Updated: 2023/10/09 11:56:53 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 void	setup_redirection(int oldfd, int newfd, int *saved)
 {
 	*saved = dup(oldfd);

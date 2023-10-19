@@ -9,8 +9,9 @@
 /*   Updated: 2023/10/09 11:38:07 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 t_node	*create_node(t_nodetype type, char *value)
 {
 	t_node	*new_node;

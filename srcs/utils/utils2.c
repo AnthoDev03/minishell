@@ -10,8 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
+
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	size_t	i;
@@ -58,31 +59,32 @@ char	*ft_strncpy(char *dest, const char *src, unsigned int n)
 	return (dest);
 }
 
-char** copieEnviron(char **environOrig) {
-    int i = 0;
-    // Compter le nombre de chaînes dans environ
-    while (environOrig[i]) {
-        i++;
-    }
+char	**copieenviron(char **environorig)
+{
+	int		i;
+	int		j;
+	char	**copie;
 
-    // Allouer de la mémoire pour le nouveau tableau
-    char **copie = (char **)gc_malloc((i + 1) * sizeof(char *));
-    if (!copie) {
-        perror("Erreur d'allocation mémoire");
-        exit(1);
-    }
-
-    for (int j = 0; j < i; j++) {
-        copie[j] = ft_strdup(environOrig[j]);
-        if (!copie[j]) {
-            perror("Erreur d'allocation mémoire");
-            exit(1);
-        }
-    }
-
-    copie[i] = NULL; // marqueur de fin du tableau
-
-    return copie;
+	i = 0;
+	while (environorig[i])
+		i++;
+	copie = (char **)gc_malloc((i + 1) * sizeof(char *));
+	if (!copie)
+	{
+		perror("Erreur d'allocation mémoire");
+		exit(1);
+	}
+	j = 0;
+	while (j < i)
+	{
+		copie[j] = ft_strdup(environorig[j]);
+		if (!copie[j])
+		{
+			perror("Erreur d'allocation mémoire");
+			exit(1);
+		}
+		j++;
+	}
+	copie[i] = NULL;
+	return (copie);
 }
-
-

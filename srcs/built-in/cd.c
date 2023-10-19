@@ -11,13 +11,13 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-void	cd_command(t_node *commandNode)
+void	cd_command(t_node *commandnode)
 {
-	if (commandNode->left == NULL || commandNode->left->value == NULL)
+	if (commandnode->left == NULL || commandnode->left->value == NULL)
 	{
 		write(2, "cd: missing argument\n", 20);
 		return ;
 	}
-	if (chdir(commandNode->left->value) != 0)
+	if (chdir(commandnode->left->value) != 0)
 		perror("cd");
 }

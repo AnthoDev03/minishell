@@ -9,36 +9,35 @@
 /*   Updated: 2023/10/09 11:34:11 by anthrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
 #include "../../gc/gc.h"
+#include "../../include/minishell.h"
 
 char	*create_new_entry(char *key, char *value)
 {
 	int		len;
 	char	*new_entry;
 
-	len = strlen(key) + strlen(value) + 2;
+	len = ft_strlen(key) + ft_strlen(value) + 2;
 	new_entry = gc_malloc(len);
 	if (!new_entry)
 	{
-		fprintf(stderr, "Memory allocation failed\n");
+		write(2, "Memory allocation failed\n", 23);
 		return (NULL);
 	}
-	strcpy(new_entry, key);
-	strcat(new_entry, "=");
-	strcat(new_entry, value);
+	ft_strcpy(new_entry, key);
+	ft_strcat(new_entry, "=");
+	ft_strcat(new_entry, value);
 	return (new_entry);
 }
 
-
-void replace_existing_var(char **env, char *key, char *value) 
+void	replace_existing_var(char **env, char *key, char *value)
 {
-    char *new_entry = create_new_entry(key, value);
-    if (new_entry) {
-        *env = new_entry;
-    }
-}
+	char	*new_entry;
 
+	new_entry = create_new_entry(key, value);
+	if (new_entry)
+		*env = new_entry;
+}
 
 int	is_key_present(char **env, char *key, int len)
 {
@@ -50,7 +49,6 @@ int	is_key_present(char **env, char *key, int len)
 	}
 	return (0);
 }
-
 
 char	**add_new_env_var(char **env, char *key, char *value)
 {
@@ -65,8 +63,8 @@ char	**add_new_env_var(char **env, char *key, char *value)
 	new_environ = gc_malloc(sizeof(char *) * (count + 2));
 	if (!new_environ)
 	{
-		fprintf(stderr, "Memory allocation failed\n");
-		return env; // Retournez l'environnement original en cas d'erreur
+		write(2, "Memory allocation failed\n", 24);
+		return (env);
 	}
 	while (idx < count)
 	{
@@ -75,6 +73,5 @@ char	**add_new_env_var(char **env, char *key, char *value)
 	}
 	new_environ[count] = create_new_entry(key, value);
 	new_environ[count + 1] = NULL;
-
-	return new_environ;
+	return (new_environ);
 }
