@@ -13,11 +13,19 @@
 
 void	cd_command(t_node *commandnode)
 {
+	char	*path;
+
 	if (commandnode->left == NULL || commandnode->left->value == NULL)
 	{
-		write(2, "cd: missing argument\n", 20);
-		return ;
+		path = getenv("HOME");
+		if (path == NULL)
+		{
+			write(2, "cd: HOME not set\n", 17);
+			return ;
+		}
 	}
-	if (chdir(commandnode->left->value) != 0)
+	else
+		path = commandnode->left->value;
+	if (chdir(path) != 0)
 		perror("cd");
 }
