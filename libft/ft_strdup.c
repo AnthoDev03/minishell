@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 #include "libft.h"
 #include "../gc/gc.h"
+
 char	*ft_strdup(const char *s)
 {
 	size_t	len;
@@ -19,8 +20,6 @@ char	*ft_strdup(const char *s)
 	len = ft_strlen(s);
 	dup_s = (char *)gc_malloc(len + 1);
 	if (dup_s != NULL)
-	{
 		ft_memcpy(dup_s, s, len + 1);
-	}
 	return (dup_s);
 }

@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gc.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anthrodr <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/09 12:06:05 by anthrodr          #+#    #+#             */
+/*   Updated: 2023/10/09 12:08:57 by anthrodr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "gc.h"
 
-static GarbageCollector	*get_garbage_collector(void)
+static t_garbagecollector	*get_garbage_collector(void)
 {
-	static GarbageCollector	gc;
+	static t_garbagecollector	gc;
 
 	gc.head = NULL;
 	return (&gc);
@@ -10,7 +21,7 @@ static GarbageCollector	*get_garbage_collector(void)
 
 void	gc_init(void)
 {
-	GarbageCollector	*gc;
+	t_garbagecollector	*gc;
 
 	gc = get_garbage_collector();
 	gc->head = NULL;
@@ -18,9 +29,9 @@ void	gc_init(void)
 
 void	*gc_malloc(size_t size)
 {
-	GarbageCollector	*gc;
+	t_garbagecollector	*gc;
 	void				*mem;
-	MemoryBlock			*new_block;
+	t_memoryblock		*new_block;
 
 	gc = get_garbage_collector();
 	mem = malloc(size);
@@ -44,9 +55,9 @@ void	*gc_malloc(size_t size)
 
 void	gc_free_all(void)
 {
-	GarbageCollector	*gc;
-	MemoryBlock			*current;
-	MemoryBlock			*temp;
+	t_garbagecollector	*gc;
+	t_memoryblock		*current;
+	t_memoryblock		*temp;
 
 	gc = get_garbage_collector();
 	current = gc->head;
