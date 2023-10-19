@@ -116,7 +116,13 @@ void				get_env_var_name(t_expander *exp, char *var_name);
 void				expand_env_var(t_expander *exp, char **copyenv);
 char				*expand_env_variables(char *input, char **copyenv);
 //------------------------------EXECUTOR-------------------------------
-
+typedef struct s_pipeline_data
+{
+	int				*pipe_fd;
+	t_node			*root;
+	int				*saved_stdin;
+	char			**copyenv;
+}					t_pipeline_data;
 void				execute(t_node *root, char **copyenv);
 void				cleanup_append_redirection(int saved_stdin, FILE *tempfile);
 FILE				*setup_append_redirection(char *delimiter);
@@ -128,8 +134,7 @@ void				execute_redirect_out_append(t_node *root, char **copyenv);
 void				execute_redirect_out(t_node *root, char **copyenv);
 void				execute_redirect_in_append(t_node *root, char **copyenv);
 void				execute_redirect_in(t_node *root, char **copyenv);
-void				parent_pipeline(int *pipe_fd, t_node *root,
-						int *saved_stdin, pid_t pid, char **copyenv);
+void				parent_pipeline(pid_t pid, t_pipeline_data *data);
 void				child_pipeline(int *pipe_fd, t_node *root, char **copyenv);
 void				execute_pipeline(t_node *root, char **copyenv);
 int					wait_for_child(pid_t pid);
@@ -138,7 +143,11 @@ void				setup_pipe(int *pipe_fd);
 void				restore_fd(int oldfd, int saved);
 void				close_pipes(int *pipe_fd);
 void				dup_to(int oldfd, int newfd, int *saved);
-
+char				**create_args_from_ast(t_node *node);
+int					calculate_ast_depth(t_node *node);
+char				**populate_args_from_ast(char **args, t_node *node,
+						int depth);
+int					handle_builtin_commands(t_node *node, char **copyenvp);
 //------------------------------BUILTINS-------------------------------
 
 void				cd_command(t_node *commandnode);

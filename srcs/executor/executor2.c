@@ -12,52 +12,10 @@
 #include "../../gc/gc.h"
 #include "../../include/minishell.h"
 
-static int	handle_builtin_commands(t_node *node, char **copyenvp)
-{
-	if (ft_strcmp(node->value, "cd") == 0)
-	{
-		cd_command(node);
-		return (1);
-	}
-	else if (ft_strcmp(node->value, "echo") == 0)
-	{
-		echo_command(node);
-		return (1);
-	}
-	else if (ft_strcmp(node->value, "env") == 0)
-	{
-		env_command(copyenvp);
-		return (1);
-	}
-	else if (ft_strcmp(node->value, "exit") == 0)
-	{
-		exit_command();
-		return (1);
-	}
-	else if (ft_strcmp(node->value, "pwd") == 0)
-	{
-		pwd_command();
-		return (1);
-	}
-	else if (ft_strcmp(node->value, "unset") == 0)
-	{
-		unset_command(node, copyenvp);
-		return (1);
-	}
-	else if (ft_strcmp(node->value, "export") == 0)
-	{
-		export_command(node, copyenvp);
-		return (1);
-	}
-	return (0);
-}
-
-char	**create_args_from_ast(t_node *node)
+int	calculate_ast_depth(t_node *node)
 {
 	int		depth;
 	t_node	*temp;
-	char	**args;
-	int		index;
 
 	depth = 0;
 	temp = node;
@@ -69,15 +27,17 @@ char	**create_args_from_ast(t_node *node)
 		else
 			temp = temp->right;
 	}
-	args = gc_malloc((depth + 1) * sizeof(char *));
-	if (!args)
-	{
-		perror("gc_malloc");
-		exit(EXIT_FAILURE);
-	}
+	return (depth);
+}
+
+char	**populate_args_from_ast(char **args, t_node *node, int depth)
+{
+	int		index;
+	t_node	*temp;
+
 	index = 0;
 	temp = node;
-	while (temp)
+	while (temp && index < depth)
 	{
 		args[index] = temp->value;
 		index++;
@@ -88,6 +48,21 @@ char	**create_args_from_ast(t_node *node)
 	}
 	args[index] = NULL;
 	return (args);
+}
+
+char	**create_args_from_ast(t_node *node)
+{
+	int		depth;
+	char	**args;
+
+	depth = calculate_ast_depth(node);
+	args = gc_malloc((depth + 1) * sizeof(char *));
+	if (!args)
+	{
+		perror("gc_malloc");
+		exit(EXIT_FAILURE);
+	}
+	return (populate_args_from_ast(args, node, depth));
 }
 
 static void	execute_external_command(t_node *node, char **copyenv)
