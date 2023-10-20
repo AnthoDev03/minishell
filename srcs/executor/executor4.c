@@ -17,11 +17,11 @@ void	execute_redirect_in_append(t_node *root, t_env *env_list)
 	FILE	*tempfile;
 	int		saved_stdin;
 
-	tempfile = setup_append_redirection(root->left->value);
+	tempfile = setup_append_redirection(root->value);
 	if (!tempfile)
 		return ;
 	setup_redirection(STDIN_FILENO, fileno(tempfile), &saved_stdin);
-	execute(root->right, env_list);
+	execute(root->left, env_list);
 	cleanup_append_redirection(saved_stdin, tempfile);
 }
 

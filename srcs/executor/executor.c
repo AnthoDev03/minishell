@@ -23,41 +23,37 @@ void	setup_redirection(int oldfd, int newfd, int *saved)
 	close(newfd);
 }
 
-static void	write_to_tempfile(int tempfile_fd, char *delimiter)
+static void write_to_tempfile(int tempfile_fd, char *delimiter)
 {
-	char	*buffer;
+    char *buffer;
 
-	while (readline("") != NULL)
-	{
-		buffer = readline("");
-		if (ft_strncmp(buffer, delimiter, ft_strlen(delimiter)) == 0
-			&& buffer[ft_strlen(delimiter)] == '\n')
-		{
-			free(buffer);
-			break ;
-		}
-		write(tempfile_fd, buffer, ft_strlen(buffer));
-		write(tempfile_fd, "\n", 1);
-		free(buffer);
-	}
+    while ((buffer = readline("")) != NULL)
+    {
+        if (ft_strncmp(buffer, delimiter, ft_strlen(delimiter)) == 0)
+        {
+            free(buffer);
+            break;
+        }
+        write(tempfile_fd, buffer, ft_strlen(buffer));
+        write(tempfile_fd, "\n", 1);
+        free(buffer);
+    }
 }
 
-FILE	*setup_append_redirection(char *delimiter)
+FILE *setup_append_redirection(char *delimiter)
 {
-	int	tempfile_fd;
+    int tempfile_fd;
 
-	tempfile_fd = open(TMP_FILENAME, O_RDWR | O_CREAT | O_TRUNC,
-			S_IRUSR | S_IWUSR);
-	if (tempfile_fd == -1)
-	{
-		perror("open");
-		return (NULL);
-	}
-	write_to_tempfile(tempfile_fd, delimiter);
-	lseek(tempfile_fd, 0, SEEK_SET);
-	dup2(tempfile_fd, STDIN_FILENO);
-	close(tempfile_fd);
-	return (stdin);
+    tempfile_fd = open(TMP_FILENAME, O_RDWR | O_CREAT | O_TRUNC,
+            S_IRUSR | S_IWUSR);
+    if (tempfile_fd == -1)
+    {
+        perror("open");
+        return (NULL);
+    }
+    write_to_tempfile(tempfile_fd, delimiter);
+    lseek(tempfile_fd, 0, SEEK_SET);
+    return (fdopen(tempfile_fd, "r"));
 }
 
 void	cleanup_append_redirection(int saved_stdin, FILE *tempfile)
